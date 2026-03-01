@@ -55,9 +55,8 @@ All test accounts use the password: `P@$$w0rd!`
 ## Getting Started
 
 1. Clone the repository
-2. Run `npm install`
-3. Copy `.env.example` to `.env` and fill in your database credentials and session secret
-4. Set up your PostgreSQL database and run the provided SQL seed file
+2. Run `npm install` to install dependencies and node into the project
+3. Import a `.env` file containing your database credentials and session secret
 5. Run `npm start` to start the development server
 
 ## Live Deployment

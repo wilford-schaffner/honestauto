@@ -33,13 +33,6 @@ All test accounts use the password: `P@$$w0rd!`
 | Employee | employee@dealership.com      |
 | User     | user@dealership.com          |
 
-## Known Limitations
-
-> List any incomplete features or known bugs here before submission.
-
-- Example: Pagination on the vehicle browse page is not yet implemented.
-- Example: Admin account management UI is partially complete.
-
 ## Repository Structure
 
 ```

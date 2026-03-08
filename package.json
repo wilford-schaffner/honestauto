@@ -1,0 +1,33 @@
+{
+  "name": "honestauto",
+  "version": "1.0.0",
+  "description": "A full-stack, server-side rendered web application for a used car dealership. Visitors can browse vehicle inventory by category, view individual vehicle detail pages, and submit contact inquiries. Registered users can leave reviews on vehicles and submit service requests for their vehicles. Employees and owners have access to management dashboards for handling inventory, reviews, service requests, and contact submissions.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wilford-schaffner/honestauto.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/wilford-schaffner/honestauto/issues"
+  },
+  "homepage": "https://github.com/wilford-schaffner/honestauto#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "ejs": "^5.0.1",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "pg": "^8.20.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14",
+    "pnpm": "^10.31.0"
+  }
+}

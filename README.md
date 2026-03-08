@@ -12,6 +12,14 @@ A full-stack, server-side rendered web application for a used car dealership. Vi
 - Session-based authentication with express-session
 - Deployed on Render
 
+## Database Schema
+
+> ERD image exported from pgAdmin will be place here.
+
+```
+![ERD Diagram](./erd.png)
+```
+
 ## User Roles
 
 **Owner**
@@ -33,6 +41,13 @@ All test accounts use the password: `P@$$w0rd!`
 | Employee | employee@dealership.com      |
 | User     | user@dealership.com          |
 
+## Known Limitations
+
+> Any incomplete features or known bugs will be listed here.
+
+- Item 1
+- Item 2
+
 ## Repository Structure
 
 ```
@@ -47,7 +62,6 @@ All test accounts use the password: `P@$$w0rd!`
 ├── public/
 │   ├── css/
 │   └── images/
-├── .env.example
 ├── server.js
 └── README.md
 ```

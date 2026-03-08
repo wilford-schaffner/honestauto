@@ -6,7 +6,12 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const caCert = fs.readFileSync(path.join(__dirname, '../../bin', 'byuicse-psql-cert.pem'));
+// CA certificate for secure Postgres connections.
+// Expect the cert at: <project_root>/bin/byuicse-psql-cert.pem
+const caCert = fs.readFileSync(path.join(__dirname, '../bin', 'byuicse-psql-cert.pem'));
+
+// Normalize NODE_ENV so we can safely inspect it
+const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
 
 const pool = new Pool({
     connectionString: process.env.DB_URL,
@@ -19,7 +24,7 @@ const pool = new Pool({
 
 let db = null;
 
-if (process.env.NODE_ENV.includes('dev') && process.env.ENABLE_SQL_LOGGING === 'true') {
+if (NODE_ENV.includes('dev') && process.env.ENABLE_SQL_LOGGING === 'true') {
     db = {
         async query(text, params) {
             try {

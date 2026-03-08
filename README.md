@@ -35,11 +35,13 @@ Registered users can leave reviews on vehicles and edit or delete their own revi
 
 All test accounts use the password: `P@$$w0rd!`
 
-| Role     | Email                        |
-|----------|------------------------------|
-| Owner    | owner@dealership.com         |
-| Employee | employee@dealership.com      |
-| User     | user@dealership.com          |
+
+| Role     | Email                                                     |
+| -------- | --------------------------------------------------------- |
+| Owner    | [owner@dealership.com](mailto:owner@dealership.com)       |
+| Employee | [employee@dealership.com](mailto:employee@dealership.com) |
+| User     | [user@dealership.com](mailto:user@dealership.com)         |
+
 
 ## Known Limitations
 
@@ -52,16 +54,31 @@ All test accounts use the password: `P@$$w0rd!`
 
 ```
 .
+├── config/
 ├── controllers/
-├── models/
-├── views/
-│   ├── partials/
-│   └── layouts/
-├── routes/
+├── docs/
 ├── middleware/
+├── models/
 ├── public/
 │   ├── css/
-│   └── images/
+│   ├── images/
+│   └── js/
+├── routes/
+├── sql/
+├── utils/
+├── views/
+│   ├── auth/
+│   ├── contact/
+│   ├── dashboard/
+│   │   ├── employee/
+│   │   └── owner/
+│   ├── errors/
+│   ├── home/
+│   ├── layouts/
+│   ├── partials/
+│   ├── reviews/
+│   ├── user/
+│   └── vehicles/
 ├── server.js
 └── README.md
 ```
@@ -71,8 +88,9 @@ All test accounts use the password: `P@$$w0rd!`
 1. Clone the repository
 2. Run `npm install` to install dependencies and node into the project
 3. Import a `.env` file containing your database credentials and session secret
-5. Run `npm start` to start the development server
+4. Run `npm start` to start the development server
 
 ## Live Deployment
 
 > Render deployment URL will be added here.
+

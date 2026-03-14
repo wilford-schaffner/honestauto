@@ -29,5 +29,10 @@ const listVehiclesPlain = async (req, res, next) => {
     }
 };
 
-export { listVehiclesPlain };
+const showHome = (req, res) => {
+    res.render('home/index', {
+        title: 'Honest Auto – Used Vehicles'
+    });
+};
 
+export { listVehiclesPlain, showHome };

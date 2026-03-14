@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { listVehiclesPlain } from '../controllers/public.js';
+import { showHome } from '../controllers/public.js';
 
 const router = Router();
 
-router.get('/', listVehiclesPlain);
+router.get('/', showHome);
 
 export default router;

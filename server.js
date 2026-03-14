@@ -3,7 +3,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { setupDatabase, testConnection } from './models/setup.js';
 import routes from './routes/index.js';
-import { listVehiclesPlain } from './controllers/public.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,6 +11,10 @@ const PORT = process.env.PORT || 3000;
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
 
 const app = express();
+
+// View engine configuration
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 // Simple request logging so we can see incoming hits
 app.use((req, res, next) => {
@@ -23,14 +26,11 @@ app.use((req, res, next) => {
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Root route: handle GET / directly so it always runs (router is for other paths)
-app.get('/', listVehiclesPlain);
-
-// Mount router for other routes (e.g. /contact, /login later)
-app.use('/', routes);
-
 // Static assets
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Mount router for all application routes
+app.use('/', routes);
 
 // 404 handler
 app.use((req, res, next) => {
@@ -59,4 +59,3 @@ app.listen(PORT, async () => {
     await testConnection();
     console.log(`[Honest Auto] Server is running on http://127.0.0.1:${PORT}`);
 });
-

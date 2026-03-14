@@ -1,0 +1,23 @@
+<% const hasSuccess = locals && (locals.success || (locals.flash && locals.flash.success)); %>
+<% const hasError = locals && (locals.error || (locals.flash && locals.flash.error)); %>
+<% const hasInfo = locals && (locals.info || (locals.flash && locals.flash.info)); %>
+
+<div class="ha-flash">
+    <% if (hasSuccess) { %>
+        <div class="ha-flash-message ha-flash-success">
+            <%= locals.success || (locals.flash && locals.flash.success) %>
+        </div>
+    <% } %>
+
+    <% if (hasError) { %>
+        <div class="ha-flash-message ha-flash-error">
+            <%= locals.error || (locals.flash && locals.flash.error) %>
+        </div>
+    <% } %>
+
+    <% if (hasInfo) { %>
+        <div class="ha-flash-message ha-flash-info">
+            <%= locals.info || (locals.flash && locals.flash.info) %>
+        </div>
+    <% } %>
+</div>

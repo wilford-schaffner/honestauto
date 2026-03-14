@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title || 'Honest Auto' %></title>
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body>
+        <div class="ha-app">
+            <header class="ha-header">
+                <div class="ha-header-inner">
+                    <%- include('../partials/header') %>
+                    <%- include('../partials/nav') %>
+                </div>
+            </header>
+
+            <main class="ha-main">
+                <section class="ha-flash-region">
+                    <%- include('../partials/flash') %>
+                </section>
+
+                <section class="ha-hero">
+                    <div class="ha-hero-content">
+                        <h1 class="ha-hero-title">Honest cars. Honest service.</h1>
+                        <p class="ha-hero-subtitle">
+                            Browse a curated inventory of used vehicles, read reviews from real drivers, and
+                            manage service requests for your car — all from a single, straightforward dashboard.
+                        </p>
+
+                        <div class="ha-hero-actions">
+                            <a href="/vehicles" class="ha-button ha-button-primary">
+                                Browse vehicles
+                            </a>
+                            <a href="/register" class="ha-button ha-button-ghost">
+                                Create an account
+                            </a>
+                        </div>
+
+                        <div class="ha-hero-highlights">
+                            <div class="ha-highlight">
+                                <h2 class="ha-highlight-title">For shoppers</h2>
+                                <p class="ha-highlight-body">
+                                    Explore inventory by category, view detailed specs and pricing, and see what
+                                    other drivers think before you visit the lot.
+                                </p>
+                            </div>
+                            <div class="ha-highlight">
+                                <h2 class="ha-highlight-title">For owners</h2>
+                                <p class="ha-highlight-body">
+                                    Submit and track service requests, leave reviews on your vehicle, and keep a
+                                    history of the work done on your car.
+                                </p>
+                            </div>
+                            <div class="ha-highlight">
+                                <h2 class="ha-highlight-title">For staff</h2>
+                                <p class="ha-highlight-body">
+                                    Manage inventory, reviews, contact messages, and service workflows from a
+                                    focused employee and owner dashboard.
+                                </p>
+                            </div>
+                        </div>
+
+                        <p class="ha-hero-note">
+                            Featured vehicles, reviews, and dashboards will appear here as the project
+                            progresses through later commits.
+                        </p>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="ha-footer">
+                <div class="ha-footer-inner">
+                    <%- include('../partials/footer') %>
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>

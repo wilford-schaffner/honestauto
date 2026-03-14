@@ -50,7 +50,7 @@
 ### Commit 2 – Sat, Mar 14
 
 **Title**: Core routing skeleton and view structure wired to DB  
-**Goal**: Set up core route files, controllers, and a clean MVC structure using your existing file scaffolding.
+**Goal**: Set up core route files, controllers, and a clean MVC structure using my existing file scaffolding.
 
 - Define top-level route modules (e.g., `home`, `auth`, `vehicles`, `reviews`, `serviceRequests`, `contact`, `dashboard`).
 - Create controller stubs that will later be filled out with real logic; ensure ESM (`import`/`export`) is used everywhere.

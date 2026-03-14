@@ -3,6 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { setupDatabase, testConnection } from './models/setup.js';
 import routes from './routes/index.js';
+import { notFoundHandler, globalErrorHandler } from './middleware/errorHandler.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,26 +34,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 
 // 404 handler
-app.use((req, res, next) => {
-    const err = new Error('Page Not Found');
-    err.status = 404;
-    next(err);
-});
+app.use(notFoundHandler);
 
 // Global error handler
-app.use((err, req, res, next) => {
-    if (res.headersSent || res.finished) {
-        return next(err);
-    }
-
-    const status = err.status || 500;
-    const message =
-        NODE_ENV === 'production'
-            ? 'An error occurred'
-            : `${err.message || 'Error'}\n\n${err.stack || ''}`;
-
-    res.status(status).type('text/plain').send(message);
-});
+app.use(globalErrorHandler);
 
 app.listen(PORT, async () => {
     await setupDatabase();

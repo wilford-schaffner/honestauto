@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title || 'Browse vehicles – Honest Auto' %></title>
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body>
+        <div class="ha-app">
+            <header class="ha-header">
+                <div class="ha-header-inner">
+                    <%- include('../partials/header') %>
+                    <%- include('../partials/nav') %>
+                </div>
+            </header>
+
+            <main class="ha-main">
+                <section class="ha-flash-region">
+                    <%- include('../partials/flash') %>
+                </section>
+
+                <section class="ha-page">
+                    <div class="ha-page-inner">
+                        <div class="ha-page-heading">
+                            <div>
+                                <h1 class="ha-page-title">Browse vehicles</h1>
+                                <p class="ha-page-body">
+                                    Shop by category, then sort by price, mileage, year, or make.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="ha-controls">
+                            <div class="ha-control-group">
+                                <span class="ha-control-label">Filter</span>
+                                <div class="ha-pill-row">
+                                    <a
+                                        href="/vehicles?sort=<%= encodeURIComponent(currentSort || 'newest') %>"
+                                        class="ha-pill <%= (currentFilter || 'all') === 'all' ? 'ha-pill-active' : '' %>"
+                                    >
+                                        All
+                                    </a>
+                                    <% (categories || []).forEach((category) => { %>
+                                        <a
+                                            href="/vehicles?filter=<%= encodeURIComponent(category.slug) %>&sort=<%= encodeURIComponent(currentSort || 'newest') %>"
+                                            class="ha-pill <%= currentFilter === category.slug ? 'ha-pill-active' : '' %>"
+                                        >
+                                            <%= category.name %>
+                                        </a>
+                                    <% }); %>
+                                </div>
+                            </div>
+
+                            <div class="ha-control-group">
+                                <span class="ha-control-label">Sort</span>
+                                <div class="ha-pill-row">
+                                    <%
+                                        const sortOptions = [
+                                            { key: 'newest', label: 'Newest' },
+                                            { key: 'price_asc', label: 'Price: Low' },
+                                            { key: 'price_desc', label: 'Price: High' },
+                                            { key: 'mileage_asc', label: 'Mileage: Low' },
+                                            { key: 'mileage_desc', label: 'Mileage: High' },
+                                            { key: 'year_desc', label: 'Year: New' },
+                                            { key: 'year_asc', label: 'Year: Old' },
+                                            { key: 'make', label: 'Make' }
+                                        ];
+                                    %>
+                                    <% sortOptions.forEach((opt) => { %>
+                                        <a
+                                            href="/vehicles?<% if ((currentFilter || 'all') !== 'all') { %>filter=<%= encodeURIComponent(currentFilter) %>&<% } %>sort=<%= encodeURIComponent(opt.key) %>"
+                                            class="ha-pill <%= (currentSort || 'newest') === opt.key ? 'ha-pill-active' : '' %>"
+                                        >
+                                            <%= opt.label %>
+                                        </a>
+                                    <% }); %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <% if (!vehicles || vehicles.length === 0) { %>
+                            <div class="ha-empty">
+                                <h2 class="ha-empty-title">No vehicles found.</h2>
+                                <p class="ha-empty-body">
+                                    Try a different category filter, or clear your filters to see everything.
+                                </p>
+                                <div class="ha-page-actions">
+                                    <a href="/vehicles" class="ha-button ha-button-ghost">Clear filters</a>
+                                </div>
+                            </div>
+                        <% } else { %>
+                            <div class="ha-vehicle-grid">
+                                <% vehicles.forEach((vehicle) => { %>
+                                    <article class="ha-card">
+                                        <a href="/vehicles/<%= vehicle.id %>" class="ha-card-link">
+                                            <div class="ha-card-media">
+                                                <% if (vehicle.primaryImage && vehicle.primaryImage.url) { %>
+                                                    <img
+                                                        class="ha-card-image"
+                                                        src="<%= vehicle.primaryImage.url %>"
+                                                        alt="<%= `${vehicle.year} ${vehicle.make} ${vehicle.model}` %>"
+                                                        loading="lazy"
+                                                    />
+                                                <% } else { %>
+                                                    <div class="ha-card-image ha-card-image-placeholder">
+                                                        No image
+                                                    </div>
+                                                <% } %>
+                                                <div class="ha-card-badge"><%= vehicle.category?.name %></div>
+                                            </div>
+                                            <div class="ha-card-body">
+                                                <h2 class="ha-card-title">
+                                                    <%= vehicle.year %> <%= vehicle.make %> <%= vehicle.model %>
+                                                </h2>
+                                                <p class="ha-card-meta">
+                                                    <% if (vehicle.mileage !== null && vehicle.mileage !== undefined) { %>
+                                                        <span><%= Number(vehicle.mileage).toLocaleString() %> miles</span>
+                                                        <span class="ha-meta-sep">•</span>
+                                                    <% } %>
+                                                    <span class="<%= vehicle.available ? 'ha-status-available' : 'ha-status-unavailable' %>">
+                                                        <%= vehicle.available ? 'Available' : 'Unavailable' %>
+                                                    </span>
+                                                </p>
+                                                <p class="ha-card-price">
+                                                    $<%= Number(vehicle.price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </article>
+                                <% }); %>
+                            </div>
+                        <% } %>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="ha-footer">
+                <div class="ha-footer-inner">
+                    <%- include('../partials/footer') %>
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>

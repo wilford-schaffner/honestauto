@@ -112,6 +112,379 @@ a:hover {
     gap: 0.75rem;
 }
 
+.ha-page-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.ha-page-heading-inline {
+    align-items: center;
+}
+
+.ha-section-title {
+    margin: 0 0 0.35rem;
+    font-size: 1.15rem;
+}
+
+.ha-section-body {
+    margin: 0;
+    color: var(--ha-text-muted);
+    font-size: 0.95rem;
+}
+
+.ha-controls {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--ha-border-subtle);
+    border-radius: 1rem;
+    background-color: #fbfbfd;
+    margin-bottom: 1.5rem;
+}
+
+.ha-control-group {
+    display: grid;
+    gap: 0.6rem;
+}
+
+.ha-control-label {
+    font-size: 0.85rem;
+    color: var(--ha-text-muted);
+}
+
+.ha-pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.ha-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.42rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid var(--ha-border-strong);
+    background-color: #ffffff;
+    color: var(--ha-text);
+    font-size: 0.88rem;
+    text-decoration: none;
+    transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.ha-pill:hover {
+    background-color: #f3f4f6;
+    text-decoration: none;
+}
+
+.ha-pill-active {
+    background-color: var(--ha-accent-soft);
+    color: var(--ha-accent);
+    border-color: transparent;
+}
+
+.ha-vehicle-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.ha-vehicle-grid-compact {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.ha-card {
+    border: 1px solid var(--ha-border-subtle);
+    border-radius: 1rem;
+    overflow: hidden;
+    background-color: #ffffff;
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.04);
+}
+
+.ha-card-link {
+    display: block;
+    text-decoration: none;
+}
+
+.ha-card-link:hover {
+    text-decoration: none;
+}
+
+.ha-card-media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    background-color: #f3f4f6;
+}
+
+.ha-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.ha-card-image-placeholder {
+    display: grid;
+    place-items: center;
+    color: var(--ha-text-muted);
+    font-size: 0.9rem;
+}
+
+.ha-card-badge {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    padding: 0.25rem 0.55rem;
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.92);
+    border: 1px solid var(--ha-border-subtle);
+    font-size: 0.78rem;
+    color: var(--ha-text);
+}
+
+.ha-card-body {
+    padding: 1rem 1rem 1.05rem;
+}
+
+.ha-card-title {
+    margin: 0 0 0.4rem;
+    font-size: 1rem;
+    line-height: 1.25;
+}
+
+.ha-card-meta {
+    margin: 0 0 0.6rem;
+    font-size: 0.85rem;
+    color: var(--ha-text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    align-items: center;
+}
+
+.ha-meta-sep {
+    opacity: 0.6;
+}
+
+.ha-card-price {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.ha-status-available {
+    color: var(--ha-success);
+}
+
+.ha-status-unavailable {
+    color: var(--ha-danger);
+}
+
+.ha-empty {
+    padding: 1.25rem;
+    border-radius: 1rem;
+    border: 1px dashed var(--ha-border-strong);
+    background-color: #ffffff;
+}
+
+.ha-empty-title {
+    margin: 0 0 0.4rem;
+    font-size: 1.05rem;
+}
+
+.ha-empty-body {
+    margin: 0 0 0.9rem;
+    color: var(--ha-text-muted);
+    font-size: 0.95rem;
+}
+
+.ha-detail-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.ha-detail-kicker {
+    margin: 0 0 0.35rem;
+    color: var(--ha-text-muted);
+    font-size: 0.9rem;
+}
+
+.ha-detail-subtitle {
+    margin: 0.25rem 0 0;
+    color: var(--ha-text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.ha-detail-price {
+    display: grid;
+    gap: 0.35rem;
+    justify-items: end;
+    text-align: right;
+}
+
+.ha-detail-price-label {
+    font-size: 0.85rem;
+    color: var(--ha-text-muted);
+}
+
+.ha-detail-price-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.ha-detail-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 1.25rem;
+    align-items: start;
+    margin-bottom: 1.5rem;
+}
+
+.ha-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+.ha-gallery-item {
+    margin: 0;
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 1px solid var(--ha-border-subtle);
+    background-color: #f3f4f6;
+}
+
+.ha-gallery-item-primary {
+    grid-column: 1 / -1;
+    aspect-ratio: 16 / 10;
+}
+
+.ha-gallery-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.ha-gallery-caption {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.82rem;
+    color: var(--ha-text-muted);
+    background-color: #ffffff;
+    border-top: 1px solid var(--ha-border-subtle);
+}
+
+.ha-gallery-placeholder {
+    padding: 1.25rem;
+    border-radius: 1rem;
+    border: 1px dashed var(--ha-border-strong);
+    background-color: #ffffff;
+    color: var(--ha-text-muted);
+}
+
+.ha-panel {
+    padding: 1rem 1rem 1.05rem;
+    border-radius: 1rem;
+    border: 1px solid var(--ha-border-subtle);
+    background-color: #ffffff;
+    margin-bottom: 1rem;
+}
+
+.ha-panel-title {
+    margin: 0 0 0.6rem;
+    font-size: 0.98rem;
+}
+
+.ha-panel-body {
+    margin: 0;
+    color: var(--ha-text-muted);
+    font-size: 0.92rem;
+    line-height: 1.55;
+}
+
+.ha-specs {
+    margin: 0;
+    display: grid;
+    gap: 0.6rem;
+}
+
+.ha-spec {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.9rem;
+}
+
+.ha-spec dt {
+    color: var(--ha-text-muted);
+}
+
+.ha-spec dd {
+    margin: 0;
+    font-weight: 600;
+}
+
+.ha-form {
+    margin-top: 1.25rem;
+}
+
+.ha-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.ha-field {
+    display: grid;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+}
+
+.ha-label {
+    font-size: 0.9rem;
+    color: var(--ha-text);
+    font-weight: 600;
+}
+
+.ha-input,
+.ha-textarea {
+    width: 100%;
+    border-radius: 0.85rem;
+    border: 1px solid var(--ha-border-strong);
+    background-color: #ffffff;
+    padding: 0.7rem 0.85rem;
+    font-size: 0.95rem;
+    color: var(--ha-text);
+    outline: none;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.ha-input:focus,
+.ha-textarea:focus {
+    border-color: rgba(37, 99, 235, 0.6);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.ha-input-error {
+    border-color: rgba(185, 28, 28, 0.55);
+}
+
+.ha-field-error {
+    margin: 0;
+    color: var(--ha-danger);
+    font-size: 0.85rem;
+}
+
 .ha-page-error .ha-page-inner {
     background-color: #fff;
 }
@@ -220,6 +593,12 @@ a:hover {
     margin: 0;
     font-size: 0.85rem;
     color: var(--ha-text-muted);
+}
+
+.ha-home-featured {
+    margin-top: 2rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--ha-border-subtle);
 }
 
 .ha-brand {
@@ -401,6 +780,28 @@ a:hover {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.75rem;
+    }
+
+    .ha-vehicle-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ha-detail-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .ha-detail-price {
+        justify-items: start;
+        text-align: left;
+    }
+
+    .ha-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ha-form-grid {
+        grid-template-columns: 1fr;
     }
 
     .ha-footer-inner {

@@ -32,7 +32,7 @@
                             <a href="/vehicles" class="ha-button ha-button-primary">
                                 Browse vehicles
                             </a>
-                            <a href="/register" class="ha-button ha-button-ghost">
+                            <a href="/auth/register" class="ha-button ha-button-ghost">
                                 Create an account
                             </a>
                         </div>
@@ -61,10 +61,54 @@
                             </div>
                         </div>
 
-                        <p class="ha-hero-note">
-                            Featured vehicles, reviews, and dashboards will appear here as the project
-                            progresses through later commits.
-                        </p>
+                        <div class="ha-home-featured">
+                            <div class="ha-page-heading ha-page-heading-inline">
+                                <div>
+                                    <h2 class="ha-section-title">Featured vehicles</h2>
+                                    <p class="ha-section-body">A quick look at what just arrived.</p>
+                                </div>
+                                <a href="/vehicles" class="ha-button ha-button-ghost">Browse all</a>
+                            </div>
+
+                            <% if (!featuredVehicles || featuredVehicles.length === 0) { %>
+                                <div class="ha-empty">
+                                    <h3 class="ha-empty-title">No featured vehicles yet.</h3>
+                                    <p class="ha-empty-body">Check back soon, or browse the full inventory.</p>
+                                </div>
+                            <% } else { %>
+                                <div class="ha-vehicle-grid ha-vehicle-grid-compact">
+                                    <% featuredVehicles.forEach((vehicle) => { %>
+                                        <article class="ha-card">
+                                            <a href="/vehicles/<%= vehicle.id %>" class="ha-card-link">
+                                                <div class="ha-card-media">
+                                                    <% if (vehicle.primaryImage && vehicle.primaryImage.url) { %>
+                                                        <img
+                                                            class="ha-card-image"
+                                                            src="<%= vehicle.primaryImage.url %>"
+                                                            alt="<%= `${vehicle.year} ${vehicle.make} ${vehicle.model}` %>"
+                                                            loading="lazy"
+                                                        />
+                                                    <% } else { %>
+                                                        <div class="ha-card-image ha-card-image-placeholder">
+                                                            No image
+                                                        </div>
+                                                    <% } %>
+                                                    <div class="ha-card-badge"><%= vehicle.category?.name %></div>
+                                                </div>
+                                                <div class="ha-card-body">
+                                                    <h3 class="ha-card-title">
+                                                        <%= vehicle.year %> <%= vehicle.make %> <%= vehicle.model %>
+                                                    </h3>
+                                                    <p class="ha-card-price">
+                                                        $<%= Number(vehicle.price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
+                                                    </p>
+                                                </div>
+                                            </a>
+                                        </article>
+                                    <% }); %>
+                                </div>
+                            <% } %>
+                        </div>
                     </div>
                 </section>
             </main>

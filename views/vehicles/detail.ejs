@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title || 'Vehicle – Honest Auto' %></title>
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body>
+        <div class="ha-app">
+            <header class="ha-header">
+                <div class="ha-header-inner">
+                    <%- include('../partials/header') %>
+                    <%- include('../partials/nav') %>
+                </div>
+            </header>
+
+            <main class="ha-main">
+                <section class="ha-flash-region">
+                    <%- include('../partials/flash') %>
+                </section>
+
+                <section class="ha-page">
+                    <div class="ha-page-inner">
+                        <div class="ha-detail-header">
+                            <div>
+                                <p class="ha-detail-kicker"><%= vehicle.category?.name %></p>
+                                <h1 class="ha-page-title">
+                                    <%= vehicle.year %> <%= vehicle.make %> <%= vehicle.model %>
+                                </h1>
+                                <p class="ha-detail-subtitle">
+                                    <% if (vehicle.mileage !== null && vehicle.mileage !== undefined) { %>
+                                        <span><%= Number(vehicle.mileage).toLocaleString() %> miles</span>
+                                        <span class="ha-meta-sep">•</span>
+                                    <% } %>
+                                    <span class="<%= vehicle.available ? 'ha-status-available' : 'ha-status-unavailable' %>">
+                                        <%= vehicle.available ? 'Available now' : 'Currently unavailable' %>
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="ha-detail-price">
+                                <span class="ha-detail-price-label">Price</span>
+                                <span class="ha-detail-price-value">
+                                    $<%= Number(vehicle.price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
+                                </span>
+                                <a href="/contact" class="ha-button ha-button-primary">Contact about this vehicle</a>
+                            </div>
+                        </div>
+
+                        <div class="ha-detail-grid">
+                            <section class="ha-detail-gallery">
+                                <% if (vehicle.images && vehicle.images.length) { %>
+                                    <div class="ha-gallery">
+                                        <% vehicle.images.forEach((img, idx) => { %>
+                                            <figure class="ha-gallery-item <%= idx === 0 ? 'ha-gallery-item-primary' : '' %>">
+                                                <img
+                                                    class="ha-gallery-image"
+                                                    src="<%= img.url %>"
+                                                    alt="<%= img.caption || `${vehicle.year} ${vehicle.make} ${vehicle.model}` %>"
+                                                    loading="<%= idx === 0 ? 'eager' : 'lazy' %>"
+                                                />
+                                                <% if (img.caption) { %>
+                                                    <figcaption class="ha-gallery-caption"><%= img.caption %></figcaption>
+                                                <% } %>
+                                            </figure>
+                                        <% }); %>
+                                    </div>
+                                <% } else { %>
+                                    <div class="ha-gallery-placeholder">No images available for this vehicle yet.</div>
+                                <% } %>
+                            </section>
+
+                            <aside class="ha-detail-panel">
+                                <div class="ha-panel">
+                                    <h2 class="ha-panel-title">Details</h2>
+                                    <dl class="ha-specs">
+                                        <div class="ha-spec">
+                                            <dt>Category</dt>
+                                            <dd><%= vehicle.category?.name %></dd>
+                                        </div>
+                                        <div class="ha-spec">
+                                            <dt>Year</dt>
+                                            <dd><%= vehicle.year %></dd>
+                                        </div>
+                                        <div class="ha-spec">
+                                            <dt>Make</dt>
+                                            <dd><%= vehicle.make %></dd>
+                                        </div>
+                                        <div class="ha-spec">
+                                            <dt>Model</dt>
+                                            <dd><%= vehicle.model %></dd>
+                                        </div>
+                                        <div class="ha-spec">
+                                            <dt>Mileage</dt>
+                                            <dd>
+                                                <% if (vehicle.mileage !== null && vehicle.mileage !== undefined) { %>
+                                                    <%= Number(vehicle.mileage).toLocaleString() %> miles
+                                                <% } else { %>
+                                                    —
+                                                <% } %>
+                                            </dd>
+                                        </div>
+                                    </dl>
+                                </div>
+
+                                <div class="ha-panel">
+                                    <h2 class="ha-panel-title">Description</h2>
+                                    <p class="ha-panel-body">
+                                        <%= vehicle.description || 'No description provided yet.' %>
+                                    </p>
+                                </div>
+
+                                <div class="ha-panel">
+                                    <h2 class="ha-panel-title">Reviews</h2>
+                                    <p class="ha-panel-body">
+                                        Reviews will appear here in a later commit. Logged-in users will be able to
+                                        leave ratings and comments.
+                                    </p>
+                                </div>
+                            </aside>
+                        </div>
+
+                        <div class="ha-page-actions">
+                            <a href="/vehicles" class="ha-button ha-button-ghost">Back to browse</a>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="ha-footer">
+                <div class="ha-footer-inner">
+                    <%- include('../partials/footer') %>
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>

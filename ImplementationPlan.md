@@ -12,7 +12,8 @@
 - Remaining commits **Mon–Fri only**, with **4 commits per week**.
 - **Final (10th) commit on Fri, Mar 27**.
 
-### Planned Commits (10) 
+### Planned Commits (10)
+
 (8 commits were present at the time of drafting this plan, although some of them are smaller)
 
 
@@ -28,6 +29,7 @@
 | 8   | Wed, Mar 25 | Employee and owner dashboards (inventory, requests, contact) |
 | 9   | Thu, Mar 26 | Security, validation, global error handling, UX polish       |
 | 10  | Fri, Mar 27 | Final deployment, docs, ERD, and cleanup                     |
+
 
 ---
 
@@ -87,7 +89,7 @@
 
 - Implement:
   - Home page showing featured vehicles (e.g., recent or by flag).
-  - Browse-by-category pages (`/vehicles`, `/vehicles/category/:id`).
+  - Browse-by-category functionality on `/vehicles`.
   - Vehicle detail pages (`/vehicles/:id`) with images, specs, price, and reviews placeholder section.
   - Contact form view and POST handler that saves contact messages to the `contact messages` table.
 - Add basic server-side validation for contact form fields and success/error flash messaging.
@@ -197,4 +199,3 @@
 - Clean up any unused files, `console.log` statements, and ensure consistent formatting.
 
 **Requirements touched**: Deployment, documentation, meaningful commit history, project polish.
-

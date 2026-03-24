@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // CA certificate for secure Postgres connections.
-// Expect the cert at: <project_root>/bin/byuicse-psql-cert.pem
+// Expect the cert at: src/bin/byuicse-psql-cert.pem
 const caCert = fs.readFileSync(path.join(__dirname, '../bin', 'byuicse-psql-cert.pem'));
 
 // Normalize NODE_ENV so we can safely inspect it

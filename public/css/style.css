@@ -734,6 +734,16 @@ a:hover {
     gap: 0.1rem;
 }
 
+.ha-auth-pill form {
+    margin: 0;
+}
+
+.ha-auth-meta {
+    padding: 0.36rem 0.7rem;
+    font-size: 0.8rem;
+    color: var(--ha-text-muted);
+}
+
 .ha-auth-link {
     padding: 0.36rem 0.9rem;
     border-radius: 999px;
@@ -741,6 +751,9 @@ a:hover {
     color: var(--ha-text);
     text-decoration: none;
     border: none;
+    background: transparent;
+    font-family: inherit;
+    cursor: pointer;
 }
 
 .ha-auth-link:hover {

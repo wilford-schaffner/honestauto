@@ -52,43 +52,52 @@ All test accounts use the password: `P@$$w0rd!`
 
 ## Repository Structure
 
+Application code lives under `src/`. Static files (CSS, client JS, images) are in `public/` at the repository root and are served from the site root (for example `/css/style.css`).
+
 ```
 .
-├── config/
-├── controllers/
-├── docs/
-├── middleware/
-├── models/
+├── ImplementationPlan.md
+├── README.md
+├── requirements.md
+├── nodemon.json
+├── package.json
 ├── public/
 │   ├── css/
 │   ├── images/
 │   └── js/
-├── routes/
-├── sql/
-├── utils/
-├── views/
-│   ├── auth/
-│   ├── contact/
-│   ├── dashboard/
-│   │   ├── employee/
-│   │   └── owner/
-│   ├── errors/
-│   ├── home/
-│   ├── layouts/
-│   ├── partials/
-│   ├── reviews/
-│   ├── user/
-│   └── vehicles/
-├── server.js
-└── README.md
+└── src/
+    ├── bin/                 # Postgres TLS certificate (used by models/db.js)
+    ├── config/
+    ├── controllers/
+    ├── middleware/
+    ├── models/
+    ├── routes/
+    ├── server.js            # application entry (see package.json scripts)
+    ├── sql/
+    │   ├── schema.sql
+    │   └── seed.sql
+    ├── utils/
+    └── views/
+        ├── auth/
+        ├── contact/
+        ├── dashboard/
+        │   ├── employee/
+        │   └── owner/
+        ├── errors/
+        ├── home/
+        ├── layouts/
+        ├── partials/
+        ├── reviews/
+        ├── user/
+        └── vehicles/
 ```
 
 ## Getting Started
 
 1. Clone the repository
-2. Run `npm install` to install dependencies and node into the project
-3. Import a `.env` file containing your database credentials and session secret
-4. Run `npm start` to start the development server
+2. Run `npm install` to install dependencies
+3. Add a `.env` file with your database credentials, session secret, and any other required variables
+4. Run `npm run dev` for local development (nodemon reloads on changes), or `npm start` to run the app with Node directly
 
 ## Live Deployment (Production URL)
 

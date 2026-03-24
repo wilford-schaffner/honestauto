@@ -1,6 +1,6 @@
 {
   "ext": "js css ejs env",
-  "exec": "node --env-file=.env server.js",
+  "exec": "node --env-file=.env src/server.js",
   "ignore": [
     ".git",
     "node_modules"

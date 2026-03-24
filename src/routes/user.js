@@ -5,8 +5,10 @@ import {
     showNewServiceRequestForm,
     showServiceRequestDetail
 } from '../controllers/user.js';
+import { requireAuth } from '../middleware/auth.js';
 
 const router = Router();
+router.use(requireAuth);
 
 router.get('/', showUserDashboard);
 router.get('/service-requests', listServiceRequests);

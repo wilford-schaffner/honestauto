@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title || 'Log in – Honest Auto' %></title>
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body>
+        <div class="ha-app">
+            <header class="ha-header">
+                <div class="ha-header-inner">
+                    <%- include('../partials/header') %>
+                    <%- include('../partials/nav') %>
+                </div>
+            </header>
+
+            <main class="ha-main">
+                <section class="ha-flash-region">
+                    <%- include('../partials/flash') %>
+                </section>
+
+                <section class="ha-page">
+                    <div class="ha-page-inner">
+                        <h1 class="ha-page-title">Log in to your account</h1>
+                        <p class="ha-page-body">
+                            Access your dashboard, vehicle reviews, and service requests.
+                        </p>
+
+                        <form method="post" action="/auth/login" class="ha-form" novalidate>
+                            <div class="ha-field">
+                                <label class="ha-label" for="email">Email</label>
+                                <input
+                                    class="ha-input <%= fieldErrors?.email ? 'ha-input-error' : '' %>"
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value="<%= form?.email || '' %>"
+                                    autocomplete="email"
+                                    required
+                                />
+                                <% if (fieldErrors?.email) { %>
+                                    <p class="ha-field-error"><%= fieldErrors.email %></p>
+                                <% } %>
+                            </div>
+
+                            <div class="ha-field">
+                                <label class="ha-label" for="password">Password</label>
+                                <input
+                                    class="ha-input <%= fieldErrors?.password ? 'ha-input-error' : '' %>"
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    autocomplete="current-password"
+                                    required
+                                />
+                                <% if (fieldErrors?.password) { %>
+                                    <p class="ha-field-error"><%= fieldErrors.password %></p>
+                                <% } %>
+                            </div>
+
+                            <% if (error) { %>
+                                <p class="ha-field-error"><%= error %></p>
+                            <% } %>
+
+                            <div class="ha-page-actions">
+                                <button type="submit" class="ha-button ha-button-primary">Log in</button>
+                                <a href="/auth/register" class="ha-button ha-button-ghost">Create account</a>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="ha-footer">
+                <div class="ha-footer-inner">
+                    <%- include('../partials/footer') %>
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>

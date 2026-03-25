@@ -2,6 +2,7 @@ import db from '../models/db.js';
 import { listCategories } from '../models/category.js';
 import { listVehicles, listFeaturedVehicles, getVehicleById } from '../models/vehicle.js';
 import { createContactMessage } from '../models/contactMessage.js';
+import { listReviewsForVehicle, findReviewByUserAndVehicle } from '../models/review.js';
 
 const listVehiclesPlain = async (req, res, next) => {
     try {
@@ -104,9 +105,20 @@ const showVehicleDetail = async (req, res, next) => {
             throw err;
         }
 
+        const reviews = await listReviewsForVehicle(vehicleId);
+        let userReview = null;
+        if (req.session?.user) {
+            userReview = await findReviewByUserAndVehicle(req.session.user.id, vehicleId);
+        }
+
         res.render('vehicles/detail', {
             title: `${vehicle.year} ${vehicle.make} ${vehicle.model} – Honest Auto`,
-            vehicle
+            vehicle,
+            reviews,
+            userReview,
+            reviewForm: { rating: '', body: '' },
+            reviewFieldErrors: {},
+            reviewFormError: null
         });
     } catch (error) {
         next(error);

@@ -110,12 +110,85 @@
                                     </p>
                                 </div>
 
-                                <div class="ha-panel">
-                                    <h2 class="ha-panel-title">Reviews</h2>
-                                    <p class="ha-panel-body">
-                                        Reviews will appear here in a later commit. Logged-in users will be able to
-                                        leave ratings and comments.
-                                    </p>
+                                <div class="ha-panel ha-reviews-panel">
+                                    <div class="ha-review-panel-header">
+                                        <h2 class="ha-panel-title">Reviews</h2>
+                                        <% if (currentUser && !userReview) { %>
+                                            <a
+                                                href="/vehicles/<%= vehicle.id %>/reviews/new"
+                                                class="ha-button ha-button-ghost ha-button-sm ha-review-compose-trigger"
+                                                aria-label="Write a review"
+                                                >+</a
+                                            >
+                                        <% } %>
+                                    </div>
+
+                                    <% if (reviews && reviews.length) { %>
+                                        <ul class="ha-review-list">
+                                            <% reviews.forEach((rev) => { %>
+                                                <% const isAuthor = currentUser && currentUser.id === rev.user_id; %>
+                                                <% const isStaff =
+                                                    currentUser &&
+                                                    (currentUser.role === 'employee' || currentUser.role === 'owner'); %>
+                                                <li class="ha-review-item">
+                                                    <div class="ha-review-item-header">
+                                                        <span class="ha-review-stars" aria-label="<%= rev.rating %> out of 5 stars">
+                                                            <% for (let s = 1; s <= 5; s++) { %>
+                                                                <%= s <= rev.rating ? '★' : '☆' %>
+                                                            <% } %>
+                                                        </span>
+                                                        <span class="ha-review-meta">
+                                                            <span class="ha-review-author"><%= rev.author_name %></span>
+                                                            <span class="ha-meta-sep">•</span>
+                                                            <time datetime="<%= new Date(rev.created_at).toISOString() %>">
+                                                                <%= new Date(rev.created_at).toLocaleDateString(undefined, {
+                                                                    year: 'numeric',
+                                                                    month: 'short',
+                                                                    day: 'numeric'
+                                                                }) %>
+                                                            </time>
+                                                        </span>
+                                                    </div>
+                                                    <p class="ha-review-body"><%= rev.body %></p>
+                                                    <% if (isAuthor || isStaff) { %>
+                                                        <div class="ha-review-actions">
+                                                            <% if (isAuthor) { %>
+                                                                <a
+                                                                    href="/vehicles/<%= vehicle.id %>/reviews/<%= rev.id %>/edit"
+                                                                    class="ha-button ha-button-ghost ha-button-sm"
+                                                                    >Edit</a
+                                                                >
+                                                            <% } %>
+                                                            <form
+                                                                method="post"
+                                                                action="/vehicles/<%= vehicle.id %>/reviews/<%= rev.id %>/delete"
+                                                                class="ha-inline-form"
+                                                            >
+                                                                <button type="submit" class="ha-button ha-button-ghost ha-button-sm ha-button-danger-ghost">
+                                                                    <%= isStaff && !isAuthor ? 'Remove' : 'Delete' %>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    <% } %>
+                                                </li>
+                                            <% }); %>
+                                        </ul>
+                                    <% } else { %>
+                                        <p class="ha-panel-body ha-review-empty">No reviews yet.</p>
+                                    <% } %>
+
+                                    <% if (currentUser) { %>
+                                        <% if (userReview) { %>
+                                            <p class="ha-panel-body ha-review-own-note">
+                                                You’ve reviewed this vehicle.
+                                                <a href="/vehicles/<%= vehicle.id %>/reviews/<%= userReview.id %>/edit">Edit your review</a>
+                                            </p>
+                                        <% } %>
+                                    <% } else { %>
+                                        <p class="ha-panel-body ha-review-login-hint">
+                                            <a href="/auth/login">Log in</a> or <a href="/auth/register">register</a> to leave a review.
+                                        </p>
+                                    <% } %>
                                 </div>
                             </aside>
                         </div>

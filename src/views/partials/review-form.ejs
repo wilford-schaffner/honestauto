@@ -1,0 +1,38 @@
+<form method="post" action="/vehicles/<%= vehicle.id %>/reviews" class="ha-form ha-review-compose" novalidate>
+    <h3 class="ha-review-compose-title">Write a review</h3>
+    <div class="ha-field">
+        <label class="ha-label" for="review-rating">Rating</label>
+        <select
+            class="ha-input <%= reviewFieldErrors?.rating ? 'ha-input-error' : '' %>"
+            id="review-rating"
+            name="rating"
+            required
+        >
+            <% const r = reviewForm?.rating; %>
+            <option value="" <%= !r ? 'selected' : '' %> disabled>Choose…</option>
+            <% const labels = ['', 'Poor', 'Fair', 'Good', 'Very good', 'Excellent']; %>
+            <% for (let n = 1; n <= 5; n++) { %>
+                <option value="<%= n %>" <%= String(r) === String(n) ? 'selected' : '' %>><%= n %> — <%= labels[n] %></option>
+            <% } %>
+        </select>
+        <% if (reviewFieldErrors?.rating) { %>
+            <p class="ha-field-error"><%= reviewFieldErrors.rating %></p>
+        <% } %>
+    </div>
+    <div class="ha-field">
+        <label class="ha-label" for="review-body">Your review</label>
+        <textarea
+            class="ha-textarea <%= reviewFieldErrors?.body ? 'ha-input-error' : '' %>"
+            id="review-body"
+            name="body"
+            rows="5"
+            required
+        ><%= reviewForm?.body || '' %></textarea>
+        <% if (reviewFieldErrors?.body) { %>
+            <p class="ha-field-error"><%= reviewFieldErrors.body %></p>
+        <% } %>
+    </div>
+    <div class="ha-page-actions">
+        <button type="submit" class="ha-button ha-button-primary">Post review</button>
+    </div>
+</form>

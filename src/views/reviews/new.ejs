@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title><%= title || 'Edit review – Honest Auto' %></title>
+        <title><%= title || 'Write review – Honest Auto' %></title>
         <link rel="stylesheet" href="/css/style.css" />
     </head>
     <body>
@@ -24,12 +24,12 @@
                     <div class="ha-page-inner">
                         <div class="ha-page-heading">
                             <div>
-                                <p class="ha-detail-kicker">Edit review</p>
+                                <p class="ha-detail-kicker">Write a review</p>
                                 <h1 class="ha-page-title">
                                     <%= vehicle.year %> <%= vehicle.make %> <%= vehicle.model %>
                                 </h1>
                                 <p class="ha-page-body ha-page-body-tight">
-                                    Update your rating and comments. Only you can edit this review.
+                                    Share your experience. Your review will appear on this vehicle’s detail page.
                                 </p>
                             </div>
                         </div>
@@ -38,17 +38,12 @@
                             <p class="ha-field-error ha-review-form-banner"><%= error %></p>
                         <% } %>
 
-                        <form
-                            method="post"
-                            action="/vehicles/<%= vehicle.id %>/reviews/<%= review.id %>/update"
-                            class="ha-form"
-                            novalidate
-                        >
+                        <form method="post" action="/vehicles/<%= vehicle.id %>/reviews" class="ha-form" novalidate>
                             <div class="ha-field">
-                                <label class="ha-label" for="edit-review-rating">Rating</label>
+                                <label class="ha-label" for="new-review-rating">Rating</label>
                                 <select
                                     class="ha-input <%= fieldErrors?.rating ? 'ha-input-error' : '' %>"
-                                    id="edit-review-rating"
+                                    id="new-review-rating"
                                     name="rating"
                                     required
                                 >
@@ -56,28 +51,32 @@
                                     <% const labels = ['', 'Poor', 'Fair', 'Good', 'Very good', 'Excellent']; %>
                                     <option value="" <%= !r ? 'selected' : '' %> disabled>Choose…</option>
                                     <% for (let n = 1; n <= 5; n++) { %>
-                                        <option value="<%= n %>" <%= String(r) === String(n) ? 'selected' : '' %>><%= n %> — <%= labels[n] %></option>
+                                        <option value="<%= n %>" <%= String(r) === String(n) ? 'selected' : '' %>>
+                                            <%= n %> — <%= labels[n] %>
+                                        </option>
                                     <% } %>
                                 </select>
                                 <% if (fieldErrors?.rating) { %>
                                     <p class="ha-field-error"><%= fieldErrors.rating %></p>
                                 <% } %>
                             </div>
+
                             <div class="ha-field">
-                                <label class="ha-label" for="edit-review-body">Your review</label>
+                                <label class="ha-label" for="new-review-body">Your review</label>
                                 <textarea
                                     class="ha-textarea <%= fieldErrors?.body ? 'ha-input-error' : '' %>"
-                                    id="edit-review-body"
+                                    id="new-review-body"
                                     name="body"
-                                    rows="6"
+                                    rows="7"
                                     required
                                 ><%= form?.body || '' %></textarea>
                                 <% if (fieldErrors?.body) { %>
                                     <p class="ha-field-error"><%= fieldErrors.body %></p>
                                 <% } %>
                             </div>
+
                             <div class="ha-page-actions">
-                                <button type="submit" class="ha-button ha-button-primary">Save changes</button>
+                                <button type="submit" class="ha-button ha-button-primary">Post review</button>
                                 <a href="/vehicles/<%= vehicle.id %>" class="ha-button ha-button-ghost">Cancel</a>
                             </div>
                         </form>
@@ -93,3 +92,4 @@
         </div>
     </body>
 </html>
+

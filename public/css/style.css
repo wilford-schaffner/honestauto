@@ -583,6 +583,18 @@ select.ha-input {
     background-size: 1.05rem;
 }
 
+/* Owner users: match ha-button-sm height + pill shape (ghost-style select) */
+select.ha-input.ha-user-role-select {
+    max-width: 11rem;
+    min-height: unset;
+    padding: 0.4rem 1.85rem 0.4rem 0.85rem;
+    font-size: 0.85rem;
+    line-height: 1.25;
+    border-radius: 999px;
+    background-position: right 0.55rem center;
+    background-size: 0.95rem;
+}
+
 .ha-input:focus,
 .ha-textarea:focus {
     border-color: rgba(37, 99, 235, 0.6);
@@ -745,10 +757,6 @@ select.ha-input {
     align-items: baseline;
     gap: 0.5rem 1rem;
     margin-bottom: 1rem;
-}
-
-.ha-dashboard-messages-head .ha-page-title {
-    margin: 0;
 }
 
 .ha-dashboard-messages-unresolved {

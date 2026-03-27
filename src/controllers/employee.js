@@ -185,25 +185,17 @@ const removeEmployeeReview = async (req, res, next) => {
     }
 };
 
-const OWNER_STAFF_SORT_KEYS = ['status', 'id', 'name', 'vehicle'];
-
-const normalizeOwnerStaffSort = (raw) => {
-    if (typeof raw !== 'string' || raw.length === 0) return 'status';
-    return OWNER_STAFF_SORT_KEYS.includes(raw) ? raw : 'status';
-};
-
 const showEmployeeServiceRequests = async (req, res, next) => {
     try {
         const isOwner = req.session.user.role === ROLES.OWNER;
         const showCompleted =
             req.query.showCompleted === '1' || req.query.showCompleted === 'true';
-        const ownerSortKey = isOwner ? normalizeOwnerStaffSort(req.query.sort) : null;
 
         const requests = await listServiceRequestsForStaff(
             isOwner
                 ? {
                       hideCompleted: !showCompleted,
-                      sortKey: ownerSortKey
+                      sortKey: 'status'
                   }
                 : {}
         );
@@ -212,8 +204,7 @@ const showEmployeeServiceRequests = async (req, res, next) => {
             title: 'Open Requests – Honest Auto',
             requests,
             ownerListControls: isOwner,
-            showCompleted: isOwner && showCompleted,
-            ownerSortKey: isOwner ? ownerSortKey : null
+            showCompleted: isOwner && showCompleted
         });
     } catch (error) {
         next(error);

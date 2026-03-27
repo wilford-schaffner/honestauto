@@ -30,12 +30,16 @@
                                             <span class="ha-review-meta"><%= user.email %></span>
                                         </div>
                                         <form method="post" action="/dashboard/owner/users/<%= user.id %>/role" class="ha-review-actions">
-                                            <select name="role" class="ha-input" style="max-width: 180px;">
+                                            <select
+                                                name="role"
+                                                class="ha-input ha-user-role-select"
+                                                aria-label="Role for <%= user.name %>"
+                                                onchange="this.form.requestSubmit()"
+                                            >
                                                 <option value="<%= roles.USER %>" <%= user.role === roles.USER ? 'selected' : '' %>>User</option>
                                                 <option value="<%= roles.EMPLOYEE %>" <%= user.role === roles.EMPLOYEE ? 'selected' : '' %>>Employee</option>
                                                 <option value="<%= roles.OWNER %>" <%= user.role === roles.OWNER ? 'selected' : '' %>>Owner</option>
                                             </select>
-                                            <button type="submit" class="ha-button ha-button-ghost ha-button-sm">Update role</button>
                                         </form>
                                     </li>
                                 <% }) %>

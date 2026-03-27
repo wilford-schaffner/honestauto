@@ -2,8 +2,10 @@
     <% const msgs = contactMessages || []; %>
     <% const unresolvedCount = msgs.filter(function (m) { return !m.resolved; }).length; %>
     <div class="ha-dashboard-messages-head">
-        <h2 class="ha-page-title">Messages</h2>
-        <span class="ha-dashboard-messages-unresolved"><%= unresolvedCount %> unresolved</span>
+        <h2 class="ha-section-title">Messages</h2>
+        <% if (unresolvedCount > 0) { %>
+            <span class="ha-dashboard-messages-unresolved"><%= unresolvedCount %> unresolved</span>
+        <% } %>
     </div>
     <% if (!msgs.length) { %>
         <div class="ha-empty ha-dashboard-messages-empty">

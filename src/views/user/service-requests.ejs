@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title || 'Your service requests – Honest Auto' %></title>
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body>
+        <div class="ha-app">
+            <header class="ha-header">
+                <div class="ha-header-inner">
+                    <%- include('../partials/header') %>
+                    <%- include('../partials/nav') %>
+                </div>
+            </header>
+
+            <main class="ha-main">
+                <section class="ha-flash-region">
+                    <%- include('../partials/flash') %>
+                </section>
+
+                <section class="ha-page">
+                    <div class="ha-page-inner">
+                        <div class="ha-page-heading ha-page-heading-inline">
+                            <div>
+                                <h1 class="ha-page-title">Your service requests</h1>
+                                <p class="ha-page-body">
+                                    Submit a request and track its progress through each stage.
+                                </p>
+                            </div>
+
+                            <div class="ha-page-actions">
+                                <a href="/user/service-requests/new" class="ha-button ha-button-primary"
+                                    >New request</a
+                                >
+                            </div>
+                        </div>
+
+                        <% if (!requests || requests.length === 0) { %>
+                            <div class="ha-empty">
+                                <h3 class="ha-empty-title">No requests yet.</h3>
+                                <p class="ha-empty-body">
+                                    When you submit a service request, you’ll be able to see status updates and
+                                    history here.
+                                </p>
+                                <div class="ha-page-actions">
+                                    <a href="/user/service-requests/new" class="ha-button ha-button-ghost"
+                                        >Create your first request</a
+                                    >
+                                </div>
+                            </div>
+                        <% } else { %>
+                            <ul class="ha-service-request-grid">
+                                <% requests.forEach((request) => { %>
+                                    <% const status = request.status; %>
+                                    <% const statusClass = status === 'completed'
+                                        ? 'ha-status-pill-completed'
+                                        : status === 'in_progress'
+                                          ? 'ha-status-pill-in-progress'
+                                          : status === 'submitted'
+                                            ? 'ha-status-pill-submitted'
+                                            : 'ha-status-pill-default'; %>
+
+                                    <li class="ha-service-request-card">
+                                        <a
+                                            href="/user/service-requests/<%= request.id %>"
+                                            class="ha-service-request-link"
+                                        >
+                                            <div class="ha-service-request-header">
+                                                <span class="ha-status-pill <%= statusClass %>">
+                                                    <%= request.status_label %>
+                                                </span>
+                                                <span class="ha-review-meta">
+                                                    <time datetime="<%= new Date(request.updated_at).toISOString() %>">
+                                                        Updated
+                                                        <%= new Date(request.updated_at).toLocaleDateString(undefined, {
+                                                            year: 'numeric',
+                                                            month: 'short',
+                                                            day: 'numeric'
+                                                        }) %>
+                                                    </time>
+                                                </span>
+                                            </div>
+
+                                            <h2 class="ha-service-request-title">
+                                                <%= request.title || 'Untitled request' %>
+                                            </h2>
+
+                                            <p class="ha-service-request-description">
+                                                <% if (request.vehicle) { %>
+                                                    <strong
+                                                        ><%= request.vehicle.year %> <%= request.vehicle.make %>
+                                                        <%= request.vehicle.model %></strong
+                                                    >
+                                                    <span class="ha-meta-sep">•</span>
+                                                <% } %>
+                                                <%= request.description %>
+                                            </p>
+                                        </a>
+                                    </li>
+                                <% }); %>
+                            </ul>
+                        <% } %>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="ha-footer">
+                <div class="ha-footer-inner">
+                    <%- include('../partials/footer') %>
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>

@@ -2,6 +2,7 @@ BEGIN;
 
 -- Drop existing tables in reverse dependency order
 DROP TABLE IF EXISTS contact_messages CASCADE;
+DROP TABLE IF EXISTS service_request_status_events CASCADE;
 DROP TABLE IF EXISTS service_requests CASCADE;
 DROP TABLE IF EXISTS reviews CASCADE;
 DROP TABLE IF EXISTS vehicle_images CASCADE;
@@ -69,12 +70,24 @@ CREATE TABLE service_requests (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     vehicle_id INTEGER REFERENCES vehicles(id) ON DELETE SET NULL,
+    title VARCHAR(120) NOT NULL,
     description TEXT NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'submitted'
         CHECK (status IN ('submitted', 'in_progress', 'completed')),
     notes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Service request status events table (timeline/history)
+CREATE TABLE service_request_status_events (
+    id SERIAL PRIMARY KEY,
+    service_request_id INTEGER NOT NULL REFERENCES service_requests(id) ON DELETE CASCADE,
+    status VARCHAR(20) NOT NULL
+        CHECK (status IN ('submitted', 'in_progress', 'completed')),
+    note TEXT,
+    actor_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Contact messages table
@@ -91,9 +104,9 @@ CREATE TABLE contact_messages (
 -- Bcrypt hash generated with cost 10
 INSERT INTO users (name, email, password, role)
 VALUES
-    ('Site Owner', 'owner@dealership.com', '$2b$10$PUMyOiWJLfQzNGMBeEJVFu8xb309MIilwPG4OWSygbA/9aei2nsrC', 'owner'),
-    ('Employee User', 'employee@dealership.com', '$2b$10$PUMyOiWJLfQzNGMBeEJVFu8xb309MIilwPG4OWSygbA/9aei2nsrC', 'employee'),
-    ('Standard User', 'user@dealership.com', '$2b$10$PUMyOiWJLfQzNGMBeEJVFu8xb309MIilwPG4OWSygbA/9aei2nsrC', 'user');
+    ('Site Owner', 'owner@dealership.com', '$2b$10$su0GP/PTnXxPpLMWl9mCPujNBMwNGqEV8tK7cIM9DN/plbfNuLaXe', 'owner'),
+    ('Employee User', 'employee@dealership.com', '$2b$10$su0GP/PTnXxPpLMWl9mCPujNBMwNGqEV8tK7cIM9DN/plbfNuLaXe', 'employee'),
+    ('Standard User', 'user@dealership.com', '$2b$10$su0GP/PTnXxPpLMWl9mCPujNBMwNGqEV8tK7cIM9DN/plbfNuLaXe', 'user');
 
 -- Seed categories
 INSERT INTO categories (name, slug)
@@ -188,11 +201,12 @@ VALUES
     );
 
 -- Seed service requests
-INSERT INTO service_requests (user_id, vehicle_id, description, status, notes)
+INSERT INTO service_requests (user_id, vehicle_id, title, description, status, notes)
 VALUES
     (
         (SELECT id FROM users WHERE email = 'user@dealership.com'),
         (SELECT id FROM vehicles WHERE make = 'Honda' AND model = 'Civic EX' AND year = 2018),
+        'Routine oil change',
         'Oil change and tire rotation.',
         'submitted',
         NULL
@@ -200,6 +214,7 @@ VALUES
     (
         (SELECT id FROM users WHERE email = 'user@dealership.com'),
         (SELECT id FROM vehicles WHERE make = 'Subaru' AND model = 'Forester Premium' AND year = 2019),
+        'Brake check before trip',
         'Brake inspection and replace pads if needed.',
         'in_progress',
         'Vehicle is currently in the shop. Waiting on parts.'
@@ -207,9 +222,49 @@ VALUES
     (
         (SELECT id FROM users WHERE email = 'user@dealership.com'),
         NULL,
+        'Road-trip safety inspection',
         'General multi-point inspection before a long road trip.',
         'completed',
         'Completed inspection; no major issues found. Recommended tire replacement before winter.'
+    );
+
+-- Seed service request status history
+INSERT INTO service_request_status_events (service_request_id, status, note, actor_user_id, created_at)
+VALUES
+    (
+        (SELECT id FROM service_requests WHERE description = 'Oil change and tire rotation.' LIMIT 1),
+        'submitted',
+        NULL,
+        (SELECT id FROM users WHERE email = 'user@dealership.com'),
+        CURRENT_TIMESTAMP - interval '20 hours'
+    ),
+    (
+        (SELECT id FROM service_requests WHERE description = 'Brake inspection and replace pads if needed.' LIMIT 1),
+        'submitted',
+        NULL,
+        (SELECT id FROM users WHERE email = 'user@dealership.com'),
+        CURRENT_TIMESTAMP - interval '2 days'
+    ),
+    (
+        (SELECT id FROM service_requests WHERE description = 'Brake inspection and replace pads if needed.' LIMIT 1),
+        'in_progress',
+        NULL,
+        (SELECT id FROM users WHERE email = 'user@dealership.com'),
+        CURRENT_TIMESTAMP - interval '12 hours'
+    ),
+    (
+        (SELECT id FROM service_requests WHERE description = 'General multi-point inspection before a long road trip.' LIMIT 1),
+        'submitted',
+        NULL,
+        (SELECT id FROM users WHERE email = 'user@dealership.com'),
+        CURRENT_TIMESTAMP - interval '3 days'
+    ),
+    (
+        (SELECT id FROM service_requests WHERE description = 'General multi-point inspection before a long road trip.' LIMIT 1),
+        'completed',
+        NULL,
+        (SELECT id FROM users WHERE email = 'user@dealership.com'),
+        CURRENT_TIMESTAMP - interval '1 hour'
     );
 
 -- Seed contact messages

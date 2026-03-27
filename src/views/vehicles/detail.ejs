@@ -44,6 +44,12 @@
                                     $<%= Number(vehicle.price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
                                 </span>
                                 <a href="/contact" class="ha-button ha-button-primary">Contact about this vehicle</a>
+                                <% if (currentUser) { %>
+                                    <a
+                                        href="/user/service-requests/new?vehicleId=<%= vehicle.id %>"
+                                        class="ha-button ha-button-ghost"
+                                    >Request service</a>
+                                <% } %>
                             </div>
                         </div>
 

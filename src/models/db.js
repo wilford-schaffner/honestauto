@@ -22,6 +22,30 @@ const pool = new Pool({
     }
 });
 
+/**
+ * Run multiple queries in a single transaction.
+ * Ensures BEGIN/COMMIT happen on the same underlying DB connection.
+ *
+ * @template T
+ * @param {(client: import('pg').PoolClient) => Promise<T>} callback
+ * @returns {Promise<T>}
+ */
+const withTransaction = async (callback) => {
+    const client = await pool.connect();
+
+    try {
+        await client.query('BEGIN');
+        const result = await callback(client);
+        await client.query('COMMIT');
+        return result;
+    } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+    } finally {
+        client.release();
+    }
+};
+
 let db = null;
 
 if (NODE_ENV.includes('dev') && process.env.ENABLE_SQL_LOGGING === 'true') {
@@ -55,4 +79,4 @@ if (NODE_ENV.includes('dev') && process.env.ENABLE_SQL_LOGGING === 'true') {
 }
 
 export default db;
-export { caCert };
+export { caCert, withTransaction };

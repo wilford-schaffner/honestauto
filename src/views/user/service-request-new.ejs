@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title || 'New service request – Honest Auto' %></title>
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body>
+        <div class="ha-app">
+            <header class="ha-header">
+                <div class="ha-header-inner">
+                    <%- include('../partials/header') %>
+                    <%- include('../partials/nav') %>
+                </div>
+            </header>
+
+            <main class="ha-main">
+                <section class="ha-flash-region">
+                    <%- include('../partials/flash') %>
+                </section>
+
+                <section class="ha-page">
+                    <div class="ha-page-inner">
+                        <div class="ha-page-heading">
+                            <div>
+                                <p class="ha-detail-kicker">New service request</p>
+                                <h1 class="ha-page-title">Request service for your vehicle</h1>
+                                <p class="ha-page-body ha-page-body-tight">
+                                    Tell us what you need and we’ll log it in our system.
+                                </p>
+                            </div>
+                        </div>
+
+                        <% if (error) { %>
+                            <p class="ha-field-error ha-review-form-banner"><%= error %></p>
+                        <% } %>
+
+                        <form method="post" action="/user/service-requests" class="ha-form" novalidate>
+                            <div class="ha-field">
+                                <label class="ha-label" for="title">Title</label>
+                                <input
+                                    class="ha-input <%= fieldErrors?.title ? 'ha-input-error' : '' %>"
+                                    id="title"
+                                    name="title"
+                                    type="text"
+                                    maxlength="120"
+                                    required
+                                    value="<%= form?.title || '' %>"
+                                    placeholder="Ex: Brake noise when slowing down"
+                                />
+                                <% if (fieldErrors?.title) { %>
+                                    <p class="ha-field-error"><%= fieldErrors.title %></p>
+                                <% } %>
+                            </div>
+
+                            <div class="ha-field">
+                                <label class="ha-label" for="vehicle_id">Vehicle</label>
+                                <select
+                                    class="ha-input <%= fieldErrors?.vehicle_id ? 'ha-input-error' : '' %>"
+                                    id="vehicle_id"
+                                    name="vehicle_id"
+                                    required
+                                >
+                                    <option value="" <%= !form?.vehicle_id ? 'selected' : '' %>>Not specified</option>
+
+                                    <% vehicles.forEach((v) => { %>
+                                        <option
+                                            value="<%= v.id %>"
+                                            <%= String(form?.vehicle_id || '') === String(v.id) ? 'selected' : '' %>
+                                        >
+                                            <%= v.year %> <%= v.make %> <%= v.model %>
+                                        </option>
+                                    <% }); %>
+                                </select>
+                                <% if (fieldErrors?.vehicle_id) { %>
+                                    <p class="ha-field-error"><%= fieldErrors.vehicle_id %></p>
+                                <% } %>
+                            </div>
+
+                            <div class="ha-field">
+                                <label class="ha-label" for="description">Description</label>
+                                <textarea
+                                    class="ha-textarea <%= fieldErrors?.description ? 'ha-input-error' : '' %>"
+                                    id="description"
+                                    name="description"
+                                    rows="7"
+                                    required
+                                ><%= form?.description || '' %></textarea>
+                                <% if (fieldErrors?.description) { %>
+                                    <p class="ha-field-error"><%= fieldErrors.description %></p>
+                                <% } %>
+                            </div>
+
+                            <div class="ha-page-actions">
+                                <button type="submit" class="ha-button ha-button-primary">Submit request</button>
+                                <a href="/user/service-requests" class="ha-button ha-button-ghost">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="ha-footer">
+                <div class="ha-footer-inner">
+                    <%- include('../partials/footer') %>
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>

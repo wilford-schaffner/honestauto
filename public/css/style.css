@@ -186,6 +186,96 @@ a:hover {
     border-color: transparent;
 }
 
+.ha-status-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.38rem 0.72rem;
+    border-radius: 999px;
+    border: none;
+    font-size: 0.9rem;
+    line-height: 1;
+}
+
+.ha-status-pill-submitted {
+    color: var(--ha-info);
+    background-color: rgba(3, 105, 161, 0.12);
+}
+
+.ha-status-pill-in-progress {
+    color: var(--ha-accent);
+    background-color: rgba(37, 99, 235, 0.12);
+}
+
+.ha-status-pill-completed {
+    color: var(--ha-success);
+    background-color: rgba(21, 128, 61, 0.12);
+}
+
+.ha-status-pill-default {
+    color: var(--ha-text);
+    background-color: rgba(17, 24, 39, 0.08);
+}
+
+.ha-service-request-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.ha-service-request-card {
+    border: 1px solid var(--ha-border-subtle);
+    border-radius: 1rem;
+    background-color: #ffffff;
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.04);
+    transition: border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
+}
+
+.ha-service-request-card:hover {
+    border-color: rgba(37, 99, 235, 0.35);
+    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
+    transform: translateY(-2px);
+}
+
+.ha-service-request-link {
+    display: block;
+    padding: 1rem 1rem 1.05rem;
+    text-decoration: none;
+}
+
+.ha-service-request-link:hover {
+    text-decoration: none;
+}
+
+.ha-service-request-link:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.3);
+    outline-offset: 2px;
+    border-radius: 1rem;
+}
+
+.ha-service-request-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.8rem;
+}
+
+.ha-service-request-title {
+    margin: 0 0 0.45rem;
+    font-size: 1rem;
+    line-height: 1.3;
+}
+
+.ha-service-request-description {
+    margin: 0;
+    color: var(--ha-text-muted);
+    font-size: 0.92rem;
+    line-height: 1.55;
+}
+
 .ha-vehicle-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -202,6 +292,13 @@ a:hover {
     overflow: hidden;
     background-color: #ffffff;
     box-shadow: 0 10px 22px rgba(15, 23, 42, 0.04);
+    transition: border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
+}
+
+.ha-card:hover {
+    border-color: rgba(37, 99, 235, 0.35);
+    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
+    transform: translateY(-2px);
 }
 
 .ha-card-link {
@@ -869,8 +966,9 @@ a:hover {
 }
 
 .ha-button-danger-ghost {
+    background-color: #ffffff;
     color: var(--ha-danger);
-    border-color: rgba(185, 28, 28, 0.35);
+    border-color: rgba(185, 28, 28, 0.55);
 }
 
 .ha-button-danger-ghost:hover {
@@ -928,6 +1026,10 @@ a:hover {
     }
 
     .ha-vehicle-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ha-service-request-grid {
         grid-template-columns: 1fr;
     }
 

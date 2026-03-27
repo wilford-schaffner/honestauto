@@ -78,7 +78,7 @@ const showVehiclesBrowse = async (req, res, next) => {
         const vehicles = await listVehicles({ categoryId, sortKey });
 
         res.render('vehicles/browse', {
-            title: 'Browse vehicles – Honest Auto',
+            title: 'Browse Vehicles – Honest Auto',
             vehicles,
             categories,
             currentFilter: filterSlug,

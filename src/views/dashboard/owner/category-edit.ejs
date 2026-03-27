@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title><%= title || 'Edit category – Honest Auto' %></title>
+        <title><%= title || 'Edit Category – Honest Auto' %></title>
         <link rel="stylesheet" href="/css/style.css" />
     </head>
     <body>
@@ -13,7 +13,7 @@
                 <section class="ha-flash-region"><%- include('../../partials/flash') %></section>
                 <section class="ha-page">
                     <div class="ha-page-inner">
-                        <h1 class="ha-page-title">Edit category</h1>
+                        <h1 class="ha-page-title">Edit Category</h1>
                         <% if (error) { %><p class="ha-field-error"><%= error %></p><% } %>
                         <form method="post" action="/dashboard/owner/categories/<%= category.id %>" class="ha-form">
                             <div class="ha-field">

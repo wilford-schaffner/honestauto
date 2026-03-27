@@ -45,7 +45,7 @@ const showOwnerDashboard = async (req, res, next) => {
         ]);
 
         res.render('dashboard/owner/index', {
-            title: 'Owner dashboard – Honest Auto',
+            title: 'Owner Dashboard – Honest Auto',
             totals: {
                 vehicles: vehicles.length,
                 users: users.length,
@@ -64,7 +64,7 @@ const showOwnerVehicles = async (req, res, next) => {
     try {
         const vehicles = await listVehicles({ sortKey: 'newest' });
         res.render('dashboard/owner/vehicles', {
-            title: 'Inventory – Honest Auto',
+            title: 'Vehicles – Honest Auto',
             vehicles
         });
     } catch (error) {
@@ -76,7 +76,7 @@ const showNewOwnerVehicle = async (req, res, next) => {
     try {
         const categories = await listCategories();
         res.render('dashboard/owner/vehicle-new', {
-            title: 'Add vehicle – Honest Auto',
+            title: 'Add Vehicle – Honest Auto',
             categories,
             form: {
                 category_id: '',
@@ -146,7 +146,7 @@ const createOwnerVehicle = async (req, res, next) => {
 
         if (!data) {
             res.status(400).render('dashboard/owner/vehicle-new', {
-                title: 'Add vehicle – Honest Auto',
+                title: 'Add Vehicle – Honest Auto',
                 categories,
                 form: {
                     category_id: typeof req.body.category_id === 'string' ? req.body.category_id : '',
@@ -189,7 +189,7 @@ const showOwnerVehicleEdit = async (req, res, next) => {
         }
 
         res.render('dashboard/owner/vehicle-edit', {
-            title: `Edit vehicle #${vehicle.id} – Honest Auto`,
+            title: `Edit Vehicle #${vehicle.id} – Honest Auto`,
             vehicle,
             categories,
             form: {
@@ -229,7 +229,7 @@ const updateOwnerVehicle = async (req, res, next) => {
         const { data, fieldErrors } = parseVehicleForm(req.body);
         if (!data) {
             res.status(400).render('dashboard/owner/vehicle-edit', {
-                title: `Edit vehicle #${vehicle.id} – Honest Auto`,
+                title: `Edit Vehicle #${vehicle.id} – Honest Auto`,
                 vehicle,
                 categories,
                 form: {
@@ -339,7 +339,7 @@ const showOwnerCategoryEdit = async (req, res, next) => {
         }
 
         res.render('dashboard/owner/category-edit', {
-            title: `Edit category – Honest Auto`,
+            title: `Edit Category – Honest Auto`,
             category,
             form: {
                 name: category.name
@@ -375,7 +375,7 @@ const updateOwnerCategory = async (req, res, next) => {
 
         if (Object.keys(fieldErrors).length > 0) {
             res.status(400).render('dashboard/owner/category-edit', {
-                title: `Edit category – Honest Auto`,
+                title: `Edit Category – Honest Auto`,
                 category,
                 form: {
                     name: typeof req.body.name === 'string' ? req.body.name : ''

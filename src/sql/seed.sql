@@ -144,39 +144,39 @@ VALUES
     ((SELECT id FROM categories WHERE slug = 'vans'), 'Chrysler', 'Pacifica Touring L', 2018, 22900.00,
      'Comfortable and quiet ride with Stow ''n Go seating and remote start.', 54000, TRUE);
 
--- Seed vehicle images with public URLs
+-- Seed vehicle images (paths served from public/ via express.static)
 INSERT INTO vehicle_images (vehicle_id, url, caption, sort_order)
 VALUES
     -- Cars
     ((SELECT id FROM vehicles WHERE make = 'Honda' AND model = 'Civic EX' AND year = 2018),
-     'https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg',
+     '/images/honda_civic.png',
      '2018 Honda Civic EX front angle', 1),
     ((SELECT id FROM vehicles WHERE make = 'Toyota' AND model = 'Camry SE' AND year = 2020),
-     'https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg',
+     '/images/toyota_camry.avif',
      '2020 Toyota Camry SE on lot', 1),
 
     -- SUVs
     ((SELECT id FROM vehicles WHERE make = 'Subaru' AND model = 'Forester Premium' AND year = 2019),
-     'https://images.pexels.com/photos/125514/pexels-photo-125514.jpeg',
+     '/images/subaru_forester.avif',
      '2019 Subaru Forester Premium in the mountains', 1),
     ((SELECT id FROM vehicles WHERE make = 'Toyota' AND model = 'RAV4 XLE' AND year = 2021),
-     'https://images.pexels.com/photos/799443/pexels-photo-799443.jpeg',
+     '/images/toyota_rav4.webp',
      '2021 Toyota RAV4 XLE city drive', 1),
 
     -- Trucks
     ((SELECT id FROM vehicles WHERE make = 'Ford' AND model = 'F-150 XLT' AND year = 2017),
-     'https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg',
+     '/images/ford_f150.avif',
      '2017 Ford F-150 XLT work truck', 1),
     ((SELECT id FROM vehicles WHERE make = 'Chevrolet' AND model = 'Silverado 1500 LT' AND year = 2019),
-     'https://images.pexels.com/photos/164634/pexels-photo-164634.jpeg',
+     '/images/chevrolet_silverado.jpg',
      '2019 Chevrolet Silverado 1500 LT on road', 1),
 
     -- Vans
     ((SELECT id FROM vehicles WHERE make = 'Honda' AND model = 'Odyssey EX-L' AND year = 2016),
-     'https://images.pexels.com/photos/3767293/pexels-photo-3767293.jpeg',
+     '/images/honda_odyssey.avif',
      '2016 Honda Odyssey EX-L family van', 1),
     ((SELECT id FROM vehicles WHERE make = 'Chrysler' AND model = 'Pacifica Touring L' AND year = 2018),
-     'https://images.pexels.com/photos/2100199/pexels-photo-2100199.jpeg',
+     '/images/chrysler_pacifica.avif',
      '2018 Chrysler Pacifica Touring L exterior', 1);
 
 -- Seed reviews

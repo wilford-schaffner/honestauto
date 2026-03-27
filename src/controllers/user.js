@@ -8,18 +8,12 @@ import {
 } from '../models/serviceRequest.js';
 import { parseServiceRequestPayload } from '../middleware/validation.js';
 
-const showUserDashboard = (req, res) => {
-    res.render('user/index', {
-        title: 'Your account – Honest Auto'
-    });
-};
-
 const listServiceRequests = async (req, res, next) => {
     try {
         const requests = await listServiceRequestsForUser(req.session.user.id);
 
         res.render('user/service-requests', {
-            title: 'Your service requests – Honest Auto',
+            title: 'Your Service Requests – Honest Auto',
             requests
         });
     } catch (error) {
@@ -41,7 +35,7 @@ const showNewServiceRequestForm = async (req, res, next) => {
             Number.isInteger(selectedVehicleId) && selectedVehicleId > 0 ? selectedVehicleId : null;
 
         res.render('user/service-request-new', {
-            title: 'New service request – Honest Auto',
+            title: 'New Service Request – Honest Auto',
             vehicles,
             form: {
                 title: '',
@@ -81,7 +75,7 @@ const showServiceRequestDetail = async (req, res, next) => {
         res.render('user/service-request-detail', {
             title: request.title
                 ? `${request.title} – Honest Auto`
-                : `Service request #${request.id} – Honest Auto`,
+                : `Service Request #${request.id} – Honest Auto`,
             request,
             events
         });
@@ -105,7 +99,7 @@ const createServiceRequestHandler = async (req, res, next) => {
 
         if (Object.keys(fieldErrors).length > 0 || !data) {
             res.status(400).render('user/service-request-new', {
-                title: 'New service request – Honest Auto',
+                title: 'New Service Request – Honest Auto',
                 vehicles,
                 form,
                 fieldErrors,
@@ -118,7 +112,7 @@ const createServiceRequestHandler = async (req, res, next) => {
             const vehicle = await getVehicleById(data.vehicle_id);
             if (!vehicle) {
                 res.status(400).render('user/service-request-new', {
-                    title: 'New service request – Honest Auto',
+                    title: 'New Service Request – Honest Auto',
                     vehicles,
                     form: {
                         ...form,
@@ -138,7 +132,9 @@ const createServiceRequestHandler = async (req, res, next) => {
             description: data.description
         });
 
-        req.session.flash = { success: 'Service request submitted. You can track it on your dashboard.' };
+        req.session.flash = {
+            success: 'Service request submitted. You can track it on your service requests page.'
+        };
         res.redirect(`/user/service-requests/${created.id}`);
     } catch (error) {
         next(error);
@@ -179,7 +175,6 @@ const cancelServiceRequestHandler = async (req, res, next) => {
 };
 
 export {
-    showUserDashboard,
     listServiceRequests,
     showNewServiceRequestForm,
     showServiceRequestDetail,

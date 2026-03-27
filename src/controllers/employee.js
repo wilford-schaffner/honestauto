@@ -30,7 +30,7 @@ const showEmployeeDashboard = async (req, res, next) => {
         ]);
 
         res.render('dashboard/employee/index', {
-            title: 'Employee dashboard – Honest Auto',
+            title: 'Employee Dashboard – Honest Auto',
             totals: {
                 vehicles: vehicles.length,
                 openRequests: requests.filter((item) => item.status !== 'completed').length,
@@ -48,7 +48,7 @@ const showEmployeeVehicles = async (req, res, next) => {
     try {
         const vehicles = await listVehicles({ sortKey: 'newest' });
         res.render('dashboard/employee/vehicles', {
-            title: 'Inventory – Honest Auto',
+            title: 'Vehicles – Honest Auto',
             vehicles
         });
     } catch (error) {
@@ -73,7 +73,7 @@ const showEmployeeVehicleEdit = async (req, res, next) => {
         }
 
         res.render('dashboard/employee/vehicle-edit', {
-            title: `Edit vehicle #${vehicle.id} – Honest Auto`,
+            title: `Edit Vehicle #${vehicle.id} – Honest Auto`,
             vehicle,
             form: {
                 price: vehicle.price,
@@ -123,7 +123,7 @@ const updateEmployeeVehicle = async (req, res, next) => {
 
         if (Object.keys(fieldErrors).length > 0) {
             res.status(400).render('dashboard/employee/vehicle-edit', {
-                title: `Edit vehicle #${existingVehicle.id} – Honest Auto`,
+                title: `Edit Vehicle #${existingVehicle.id} – Honest Auto`,
                 vehicle: existingVehicle,
                 form: {
                     price: rawPrice,
@@ -209,7 +209,7 @@ const showEmployeeServiceRequests = async (req, res, next) => {
         );
 
         res.render('dashboard/employee/service-requests', {
-            title: 'Service requests – Honest Auto',
+            title: 'Open Requests – Honest Auto',
             requests,
             ownerListControls: isOwner,
             showCompleted: isOwner && showCompleted,
@@ -239,7 +239,7 @@ const showEmployeeServiceRequestDetail = async (req, res, next) => {
         const events = await listServiceRequestStatusEventsForRequest(requestId);
 
         res.render('dashboard/employee/service-request-detail', {
-            title: `Service request #${request.id} – Honest Auto`,
+            title: `Service Request #${request.id} – Honest Auto`,
             request,
             events,
             statuses: SERVICE_REQUEST_STATUSES,

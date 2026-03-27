@@ -19,7 +19,7 @@
                 <section class="ha-page">
                     <div class="ha-page-inner">
                         <div class="ha-page-heading ha-page-heading-inline">
-                            <h1 class="ha-page-title">Review moderation</h1>
+                            <h1 class="ha-page-title">Reviews</h1>
                             <div class="ha-page-actions">
                                 <a
                                     href="<%= currentUser?.role === 'owner' ? '/dashboard/owner' : '/dashboard/employee' %>"
@@ -29,7 +29,7 @@
                             </div>
                         </div>
                         <% if (!reviews || reviews.length === 0) { %>
-                            <div class="ha-empty"><h3 class="ha-empty-title">No reviews found.</h3></div>
+                            <div class="ha-empty"><h3 class="ha-empty-title">No Reviews Found.</h3></div>
                         <% } else { %>
                             <ul class="ha-review-list">
                                 <% reviews.forEach((review) => { %>

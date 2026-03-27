@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title><%= title || 'Add vehicle – Honest Auto' %></title>
+        <title><%= title || 'Add Vehicle – Honest Auto' %></title>
         <link rel="stylesheet" href="/css/style.css" />
     </head>
     <body>
@@ -13,7 +13,7 @@
                 <section class="ha-flash-region"><%- include('../../partials/flash') %></section>
                 <section class="ha-page">
                     <div class="ha-page-inner">
-                        <h1 class="ha-page-title">Add vehicle</h1>
+                        <h1 class="ha-page-title">Add Vehicle</h1>
                         <% if (error) { %><p class="ha-field-error"><%= error %></p><% } %>
                         <form method="post" action="/dashboard/owner/vehicles/new" class="ha-form">
                             <div class="ha-form-grid">

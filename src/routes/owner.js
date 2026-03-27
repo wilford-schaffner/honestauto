@@ -16,10 +16,7 @@ import {
     updateOwnerUserRole,
     showOwnerContactSubmissions
 } from '../controllers/owner.js';
-import {
-    makePostToggleContactMessageResolved,
-    makePostResolveAllContactMessages
-} from '../controllers/contactMessageActions.js';
+import { makePostToggleContactMessageResolved } from '../controllers/contactMessageActions.js';
 import { requireAuth, requireRole } from '../middleware/auth.js';
 import { ROLES } from '../models/user.js';
 
@@ -41,10 +38,6 @@ router.post('/categories/:id/delete', deleteOwnerCategory);
 router.get('/users', showOwnerUsers);
 router.post('/users/:id/role', updateOwnerUserRole);
 router.get('/contact-submissions', showOwnerContactSubmissions);
-router.post(
-    '/contact-messages/resolve-all',
-    makePostResolveAllContactMessages('/dashboard/owner')
-);
 router.post(
     '/contact-messages/:id/toggle-resolved',
     makePostToggleContactMessageResolved('/dashboard/owner')

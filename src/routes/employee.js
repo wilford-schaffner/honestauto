@@ -11,10 +11,7 @@ import {
     updateEmployeeServiceRequest,
     showEmployeeContactSubmissions
 } from '../controllers/employee.js';
-import {
-    makePostToggleContactMessageResolved,
-    makePostResolveAllContactMessages
-} from '../controllers/contactMessageActions.js';
+import { makePostToggleContactMessageResolved } from '../controllers/contactMessageActions.js';
 import { requireAuth, requireRole } from '../middleware/auth.js';
 import { ROLES } from '../models/user.js';
 
@@ -31,10 +28,6 @@ router.get('/service-requests', showEmployeeServiceRequests);
 router.get('/service-requests/:id', showEmployeeServiceRequestDetail);
 router.post('/service-requests/:id', updateEmployeeServiceRequest);
 router.get('/contact-submissions', showEmployeeContactSubmissions);
-router.post(
-    '/contact-messages/resolve-all',
-    makePostResolveAllContactMessages('/dashboard/employee')
-);
 router.post(
     '/contact-messages/:id/toggle-resolved',
     makePostToggleContactMessageResolved('/dashboard/employee')

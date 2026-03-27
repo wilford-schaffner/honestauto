@@ -3,7 +3,7 @@ import { createUser, findUserByEmail } from '../models/user.js';
 
 const showLoginForm = (req, res) => {
     res.render('auth/login', {
-        title: 'Log in – Honest Auto',
+        title: 'Log In – Honest Auto',
         error: null,
         form: { email: '' },
         fieldErrors: {}
@@ -12,7 +12,7 @@ const showLoginForm = (req, res) => {
 
 const showRegisterForm = (req, res) => {
     res.render('auth/register', {
-        title: 'Create account – Honest Auto',
+        title: 'Create Account – Honest Auto',
         error: null,
         form: { name: '', email: '' },
         fieldErrors: {}
@@ -37,7 +37,7 @@ const handleLogin = async (req, res, next) => {
 
         if (Object.keys(fieldErrors).length > 0) {
             return res.status(400).render('auth/login', {
-                title: 'Log in – Honest Auto',
+                title: 'Log In – Honest Auto',
                 error: 'Please correct the highlighted fields.',
                 form: { email },
                 fieldErrors
@@ -49,7 +49,7 @@ const handleLogin = async (req, res, next) => {
 
         if (!user || !passwordIsValid) {
             return res.status(401).render('auth/login', {
-                title: 'Log in – Honest Auto',
+                title: 'Log In – Honest Auto',
                 error: 'Invalid email or password.',
                 form: { email },
                 fieldErrors: {}
@@ -96,7 +96,7 @@ const handleRegister = async (req, res, next) => {
 
         if (Object.keys(fieldErrors).length > 0) {
             return res.status(400).render('auth/register', {
-                title: 'Create account – Honest Auto',
+                title: 'Create Account – Honest Auto',
                 error: 'Please correct the highlighted fields.',
                 form: { name, email },
                 fieldErrors
@@ -106,7 +106,7 @@ const handleRegister = async (req, res, next) => {
         const existingUser = await findUserByEmail(email);
         if (existingUser) {
             return res.status(409).render('auth/register', {
-                title: 'Create account – Honest Auto',
+                title: 'Create Account – Honest Auto',
                 error: 'An account with that email already exists.',
                 form: { name, email },
                 fieldErrors: {}

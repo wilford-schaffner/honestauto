@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title><%= title || 'Service request – Honest Auto' %></title>
+        <title><%= title || 'Service Request – Honest Auto' %></title>
         <link rel="stylesheet" href="/css/style.css" />
     </head>
     <body>
@@ -28,7 +28,7 @@
                                 <p class="ha-detail-kicker">
                                     <%= request.vehicle?.category_name ? request.vehicle.category_name : 'Service request' %>
                                 </p>
-                                <h1 class="ha-page-title"><%= request.title || `Service request #${request.id}` %></h1>
+                                <h1 class="ha-page-title"><%= request.title || `Service Request #${request.id}` %></h1>
                                 <p class="ha-detail-subtitle">
                                     <span>Request #<%= request.id %></span>
                                     <span class="ha-meta-sep">•</span>

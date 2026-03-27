@@ -1,7 +1,4 @@
-import {
-    toggleContactMessageResolvedById,
-    resolveAllContactMessages
-} from '../models/contactMessage.js';
+import { toggleContactMessageResolvedById } from '../models/contactMessage.js';
 
 const parsePositiveInt = (raw) => {
     const value = Number.parseInt(raw, 10);
@@ -30,14 +27,4 @@ const makePostToggleContactMessageResolved = (redirectPath) => async (req, res, 
     }
 };
 
-const makePostResolveAllContactMessages = (redirectPath) => async (req, res, next) => {
-    try {
-        await resolveAllContactMessages();
-        req.session.flash = { success: 'All messages marked as resolved.' };
-        res.redirect(redirectPath);
-    } catch (error) {
-        next(error);
-    }
-};
-
-export { makePostToggleContactMessageResolved, makePostResolveAllContactMessages };
+export { makePostToggleContactMessageResolved };

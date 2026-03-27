@@ -51,20 +51,9 @@ const toggleContactMessageResolvedById = async (messageId) => {
     return result.rows[0] ?? null;
 };
 
-const resolveAllContactMessages = async () => {
-    await db.query(
-        `
-        UPDATE contact_messages
-        SET resolved = TRUE
-        WHERE resolved = FALSE
-        `
-    );
-};
-
 export {
     createContactMessage,
     listContactMessages,
-    toggleContactMessageResolvedById,
-    resolveAllContactMessages
+    toggleContactMessageResolvedById
 };
 

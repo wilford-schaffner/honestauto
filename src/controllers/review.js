@@ -38,7 +38,7 @@ const renderNewReviewPage = async (req, res, next, options) => {
         }
 
         res.render('reviews/new', {
-            title: `Write review – ${vehicle.year} ${vehicle.make} ${vehicle.model}`,
+            title: `Write Review – ${vehicle.year} ${vehicle.make} ${vehicle.model}`,
             vehicle,
             form: options.form ?? { rating: '', body: '' },
             fieldErrors: options.fieldErrors ?? {},
@@ -132,7 +132,7 @@ const showEditReview = async (req, res, next) => {
         }
 
         res.render('reviews/edit', {
-            title: `Edit review – ${vehicle.year} ${vehicle.make} ${vehicle.model}`,
+            title: `Edit Review – ${vehicle.year} ${vehicle.make} ${vehicle.model}`,
             vehicle,
             review,
             form: { rating: String(review.rating), body: review.body },
@@ -169,7 +169,7 @@ const updateReview = async (req, res, next) => {
                 rawRating === undefined || rawRating === null ? '' : String(rawRating);
             const bodyVal = typeof req.body?.body === 'string' ? req.body.body : '';
             return res.render('reviews/edit', {
-                title: `Edit review – ${vehicle.year} ${vehicle.make} ${vehicle.model}`,
+                title: `Edit Review – ${vehicle.year} ${vehicle.make} ${vehicle.model}`,
                 vehicle,
                 review,
                 form: { rating: ratingVal, body: bodyVal },

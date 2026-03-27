@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title><%= title || 'Service requests – Honest Auto' %></title>
+        <title><%= title || 'Open Requests – Honest Auto' %></title>
         <link rel="stylesheet" href="/css/style.css" />
     </head>
     <body>
@@ -20,7 +20,7 @@
                     <div class="ha-page-inner">
                         <div class="ha-page-heading ha-page-heading-inline">
                             <div>
-                                <h1 class="ha-page-title">Service requests</h1>
+                                <h1 class="ha-page-title">Open Requests</h1>
                                 <% if (ownerListControls) { %>
                                     <p class="ha-page-body">
                                         <% if (showCompleted) { %>
@@ -75,7 +75,7 @@
                             <% } %>
                         </div>
                         <% if (!requests || requests.length === 0) { %>
-                            <div class="ha-empty"><h3 class="ha-empty-title">No service requests found.</h3></div>
+                            <div class="ha-empty"><h3 class="ha-empty-title">No Service Requests Found.</h3></div>
                         <% } else { %>
                             <ul class="ha-service-request-grid">
                                 <% requests.forEach((request) => { %>

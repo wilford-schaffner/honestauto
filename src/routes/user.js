@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import {
-    showUserDashboard,
     listServiceRequests,
     showNewServiceRequestForm,
     showServiceRequestDetail,
@@ -12,7 +11,7 @@ import { requireAuth } from '../middleware/auth.js';
 const router = Router();
 router.use(requireAuth);
 
-router.get('/', showUserDashboard);
+router.get('/', listServiceRequests);
 router.get('/service-requests', listServiceRequests);
 router.get('/service-requests/new', showNewServiceRequestForm);
 router.post('/service-requests', createServiceRequestHandler);

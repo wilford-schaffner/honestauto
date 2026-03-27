@@ -76,4 +76,39 @@ const getCategoryWithVehicles = async (categoryId) => {
     };
 };
 
-export { listCategories, getCategoryById, getCategoryWithVehicles };
+const createCategory = async ({ name, slug }) => {
+    const result = await db.query(
+        `INSERT INTO categories (name, slug)
+         VALUES ($1, $2)
+         RETURNING id, name, slug`,
+        [name, slug]
+    );
+
+    return result.rows[0];
+};
+
+const updateCategoryById = async ({ categoryId, name, slug }) => {
+    const result = await db.query(
+        `UPDATE categories
+         SET name = $2, slug = $3, updated_at = CURRENT_TIMESTAMP
+         WHERE id = $1
+         RETURNING id, name, slug`,
+        [categoryId, name, slug]
+    );
+
+    return result.rows[0] || null;
+};
+
+const deleteCategoryById = async (categoryId) => {
+    const result = await db.query(`DELETE FROM categories WHERE id = $1`, [categoryId]);
+    return result.rowCount > 0;
+};
+
+export {
+    listCategories,
+    getCategoryById,
+    getCategoryWithVehicles,
+    createCategory,
+    updateCategoryById,
+    deleteCategoryById
+};

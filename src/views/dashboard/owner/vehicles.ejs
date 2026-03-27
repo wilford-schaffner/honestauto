@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title || 'Inventory – Honest Auto' %></title>
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body>
+        <div class="ha-app">
+            <header class="ha-header">
+                <div class="ha-header-inner">
+                    <%- include('../../partials/header') %>
+                    <%- include('../../partials/nav') %>
+                </div>
+            </header>
+            <main class="ha-main">
+                <section class="ha-flash-region"><%- include('../../partials/flash') %></section>
+                <section class="ha-page">
+                    <div class="ha-page-inner">
+                        <div class="ha-page-heading ha-page-heading-inline">
+                            <h1 class="ha-page-title">Vehicle inventory</h1>
+                            <div class="ha-page-actions">
+                                <a href="/dashboard/owner" class="ha-button ha-button-ghost">Back</a>
+                                <a href="/dashboard/owner/vehicles/new" class="ha-button ha-button-primary">Add vehicle</a>
+                            </div>
+                        </div>
+                        <% if (!vehicles || vehicles.length === 0) { %>
+                            <div class="ha-empty"><h3 class="ha-empty-title">No vehicles found.</h3></div>
+                        <% } else { %>
+                            <ul class="ha-review-list">
+                                <% vehicles.forEach((vehicle) => { %>
+                                    <li class="ha-review-item">
+                                        <div class="ha-review-item-header">
+                                            <span class="ha-review-author"><%= vehicle.year %> <%= vehicle.make %> <%= vehicle.model %></span>
+                                            <span class="ha-review-meta"><%= vehicle.category?.name %></span>
+                                        </div>
+                                        <p class="ha-review-meta">
+                                            $<%= Number(vehicle.price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
+                                            <span class="ha-meta-sep">•</span>
+                                            <span class="<%= vehicle.available ? 'ha-status-available' : 'ha-status-unavailable' %>"><%= vehicle.available ? 'Available' : 'Unavailable' %></span>
+                                        </p>
+                                        <div class="ha-review-actions">
+                                            <a href="/dashboard/owner/vehicles/<%= vehicle.id %>/edit" class="ha-button ha-button-ghost ha-button-sm">Edit</a>
+                                            <form method="post" action="/dashboard/owner/vehicles/<%= vehicle.id %>/delete" class="ha-inline-form">
+                                                <button type="submit" class="ha-button ha-button-danger-ghost ha-button-sm" onclick="return confirm('Delete this vehicle?');">Delete</button>
+                                            </form>
+                                        </div>
+                                    </li>
+                                <% }) %>
+                            </ul>
+                        <% } %>
+                    </div>
+                </section>
+            </main>
+            <footer class="ha-footer">
+                <div class="ha-footer-inner"><%- include('../../partials/footer') %></div>
+            </footer>
+        </div>
+    </body>
+</html>

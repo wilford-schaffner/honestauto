@@ -233,4 +233,85 @@ const getVehicleById = async (vehicleId) => {
     };
 };
 
-export { listVehicles, listFeaturedVehicles, getVehicleById };
+const createVehicle = async ({
+    categoryId,
+    make,
+    model,
+    year,
+    price,
+    description,
+    mileage,
+    available
+}) => {
+    const result = await db.query(
+        `INSERT INTO vehicles
+            (category_id, make, model, year, price, description, mileage, available)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+         RETURNING id`,
+        [categoryId, make, model, year, price, description, mileage, available]
+    );
+
+    return result.rows[0] || null;
+};
+
+const updateVehicleById = async ({
+    vehicleId,
+    categoryId,
+    make,
+    model,
+    year,
+    price,
+    description,
+    mileage,
+    available
+}) => {
+    const result = await db.query(
+        `UPDATE vehicles
+         SET
+            category_id = $2,
+            make = $3,
+            model = $4,
+            year = $5,
+            price = $6,
+            description = $7,
+            mileage = $8,
+            available = $9,
+            updated_at = CURRENT_TIMESTAMP
+         WHERE id = $1
+         RETURNING id`,
+        [vehicleId, categoryId, make, model, year, price, description, mileage, available]
+    );
+
+    return result.rows[0] || null;
+};
+
+const updateVehicleForEmployeeById = async ({ vehicleId, price, description, available }) => {
+    const result = await db.query(
+        `UPDATE vehicles
+         SET
+            price = $2,
+            description = $3,
+            available = $4,
+            updated_at = CURRENT_TIMESTAMP
+         WHERE id = $1
+         RETURNING id`,
+        [vehicleId, price, description, available]
+    );
+
+    return result.rows[0] || null;
+};
+
+const deleteVehicleById = async (vehicleId) => {
+    const result = await db.query(`DELETE FROM vehicles WHERE id = $1`, [vehicleId]);
+    return result.rowCount > 0;
+};
+
+export {
+    listVehicles,
+    listFeaturedVehicles,
+    getVehicleById,
+    createVehicle,
+    updateVehicleById,
+    updateVehicleForEmployeeById,
+    deleteVehicleById
+};

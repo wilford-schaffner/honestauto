@@ -14,27 +14,48 @@
                     <%- include('../../partials/nav') %>
                 </div>
             </header>
-
             <main class="ha-main">
-                <section class="ha-flash-region">
-                    <%- include('../../partials/flash') %>
-                </section>
-
+                <section class="ha-flash-region"><%- include('../../partials/flash') %></section>
                 <section class="ha-page">
                     <div class="ha-page-inner">
-                        <h1 class="ha-page-title">Reviews</h1>
-                        <p class="ha-panel-body">
-                            Remove inappropriate reviews from each vehicle’s detail page using the Remove control next to
-                            the review. A fuller moderation list will be added to this dashboard in a later update.
-                        </p>
+                        <div class="ha-page-heading ha-page-heading-inline">
+                            <h1 class="ha-page-title">Review moderation</h1>
+                            <div class="ha-page-actions">
+                                <a
+                                    href="<%= currentUser?.role === 'owner' ? '/dashboard/owner' : '/dashboard/employee' %>"
+                                    class="ha-button ha-button-ghost"
+                                    >Back</a
+                                >
+                            </div>
+                        </div>
+                        <% if (!reviews || reviews.length === 0) { %>
+                            <div class="ha-empty"><h3 class="ha-empty-title">No reviews found.</h3></div>
+                        <% } else { %>
+                            <ul class="ha-review-list">
+                                <% reviews.forEach((review) => { %>
+                                    <li class="ha-review-item">
+                                        <div class="ha-review-item-header">
+                                            <span class="ha-review-author"><%= review.vehicle_year %> <%= review.vehicle_make %> <%= review.vehicle_model %></span>
+                                            <span class="ha-review-meta">
+                                                By <%= review.author_name %> <span class="ha-meta-sep">•</span> <%= review.rating %>/5
+                                            </span>
+                                        </div>
+                                        <p class="ha-review-body"><%= review.body %></p>
+                                        <div class="ha-review-actions">
+                                            <a href="/vehicles/<%= review.vehicle_id %>" class="ha-button ha-button-ghost ha-button-sm">View vehicle</a>
+                                            <form method="post" action="/dashboard/employee/reviews/<%= review.id %>/delete" class="ha-inline-form">
+                                                <button type="submit" class="ha-button ha-button-danger-ghost ha-button-sm" onclick="return confirm('Remove this review?');">Remove</button>
+                                            </form>
+                                        </div>
+                                    </li>
+                                <% }) %>
+                            </ul>
+                        <% } %>
                     </div>
                 </section>
             </main>
-
             <footer class="ha-footer">
-                <div class="ha-footer-inner">
-                    <%- include('../../partials/footer') %>
-                </div>
+                <div class="ha-footer-inner"><%- include('../../partials/footer') %></div>
             </footer>
         </div>
     </body>

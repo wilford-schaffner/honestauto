@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title || 'Categories – Honest Auto' %></title>
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body>
+        <div class="ha-app">
+            <header class="ha-header"><div class="ha-header-inner"><%- include('../../partials/header') %><%- include('../../partials/nav') %></div></header>
+            <main class="ha-main">
+                <section class="ha-flash-region"><%- include('../../partials/flash') %></section>
+                <section class="ha-page">
+                    <div class="ha-page-inner">
+                        <div class="ha-page-heading ha-page-heading-inline">
+                            <h1 class="ha-page-title">Categories</h1>
+                            <div class="ha-page-actions">
+                                <a href="/dashboard/owner" class="ha-button ha-button-ghost">Back</a>
+                            </div>
+                        </div>
+                        <% if (error) { %><p class="ha-field-error"><%= error %></p><% } %>
+                        <form method="post" action="/dashboard/owner/categories" class="ha-form">
+                            <div class="ha-field">
+                                <label class="ha-label" for="name">New category name</label>
+                                <input id="name" name="name" class="ha-input <%= fieldErrors.name ? 'ha-input-error' : '' %>" value="<%= form.name %>" />
+                                <% if (fieldErrors.name) { %><p class="ha-field-error"><%= fieldErrors.name %></p><% } %>
+                            </div>
+                            <div class="ha-page-actions"><button type="submit" class="ha-button ha-button-primary">Add category</button></div>
+                        </form>
+                        <ul class="ha-review-list">
+                            <% categories.forEach((category) => { %>
+                                <li class="ha-review-item">
+                                    <div class="ha-review-item-header">
+                                        <span class="ha-review-author"><%= category.name %></span>
+                                        <span class="ha-review-meta">/<%= category.slug %></span>
+                                    </div>
+                                    <div class="ha-review-actions">
+                                        <a href="/dashboard/owner/categories/<%= category.id %>/edit" class="ha-button ha-button-ghost ha-button-sm">Edit</a>
+                                        <form method="post" action="/dashboard/owner/categories/<%= category.id %>/delete" class="ha-inline-form">
+                                            <button type="submit" class="ha-button ha-button-danger-ghost ha-button-sm" onclick="return confirm('Delete this category?');">Delete</button>
+                                        </form>
+                                    </div>
+                                </li>
+                            <% }) %>
+                        </ul>
+                    </div>
+                </section>
+            </main>
+            <footer class="ha-footer"><div class="ha-footer-inner"><%- include('../../partials/footer') %></div></footer>
+        </div>
+    </body>
+</html>

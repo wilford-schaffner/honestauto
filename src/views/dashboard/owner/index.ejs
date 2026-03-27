@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title || 'Owner dashboard – Honest Auto' %></title>
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body>
+        <div class="ha-app">
+            <header class="ha-header">
+                <div class="ha-header-inner">
+                    <%- include('../../partials/header') %>
+                    <%- include('../../partials/nav') %>
+                </div>
+            </header>
+            <main class="ha-main">
+                <section class="ha-flash-region"><%- include('../../partials/flash') %></section>
+                <section class="ha-page">
+                    <div class="ha-page-inner">
+                        <h1 class="ha-page-title">Owner dashboard</h1>
+                        <p class="ha-page-body">Full administrative controls for inventory, users, service requests, reviews, and messages.</p>
+                        <div class="ha-hero-highlights ha-hero-highlights-owner">
+                            <article class="ha-highlight">
+                                <div class="ha-highlight-top">
+                                    <h3 class="ha-highlight-title">Vehicles</h3>
+                                    <div class="ha-highlight-actions">
+                                        <a href="/dashboard/owner/categories" class="ha-button ha-button-ghost ha-button-sm">Manage Categories</a>
+                                        <a href="/dashboard/owner/vehicles" class="ha-button ha-button-ghost ha-button-sm">View</a>
+                                    </div>
+                                </div>
+                                <p class="ha-highlight-body"><%= totals?.vehicles || 0 %> listed</p>
+                            </article>
+                            <article class="ha-highlight">
+                                <div class="ha-highlight-top">
+                                    <h3 class="ha-highlight-title">Open Requests</h3>
+                                    <div class="ha-highlight-actions">
+                                        <a href="/dashboard/employee/service-requests" class="ha-button ha-button-ghost ha-button-sm">View</a>
+                                    </div>
+                                </div>
+                                <p class="ha-highlight-body"><%= totals?.openRequests || 0 %> active</p>
+                            </article>
+                            <article class="ha-highlight">
+                                <div class="ha-highlight-top">
+                                    <h3 class="ha-highlight-title">Reviews</h3>
+                                    <div class="ha-highlight-actions">
+                                        <a href="/dashboard/employee/reviews" class="ha-button ha-button-ghost ha-button-sm">View</a>
+                                    </div>
+                                </div>
+                                <p class="ha-highlight-body"><%= totals?.reviews || 0 %> to moderate</p>
+                            </article>
+                            <article class="ha-highlight">
+                                <div class="ha-highlight-top">
+                                    <h3 class="ha-highlight-title">Users</h3>
+                                    <div class="ha-highlight-actions">
+                                        <a href="/dashboard/owner/users" class="ha-button ha-button-ghost ha-button-sm">View</a>
+                                    </div>
+                                </div>
+                                <p class="ha-highlight-body"><%= totals?.users || 0 %> accounts</p>
+                            </article>
+                        </div>
+                        <%- include('../../partials/dashboard-messages') %>
+                    </div>
+                </section>
+            </main>
+            <footer class="ha-footer">
+                <div class="ha-footer-inner"><%- include('../../partials/footer') %></div>
+            </footer>
+        </div>
+    </body>
+</html>

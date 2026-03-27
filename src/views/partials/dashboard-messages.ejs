@@ -1,0 +1,48 @@
+<section class="ha-dashboard-messages">
+    <div class="ha-dashboard-messages-head">
+        <h2 class="ha-dashboard-messages-title">Messages</h2>
+        <% const msgs = contactMessages || []; %>
+        <% const unresolvedCount = msgs.filter(function (m) { return !m.resolved; }).length; %>
+        <% if (unresolvedCount > 0) { %>
+            <form
+                method="post"
+                action="<%= contactMessagesActionBase %>/contact-messages/resolve-all"
+                class="ha-inline-form"
+            >
+                <button type="submit" class="ha-button ha-button-ghost ha-button-sm">Resolve All</button>
+            </form>
+        <% } %>
+    </div>
+    <% if (!msgs.length) { %>
+        <div class="ha-empty ha-dashboard-messages-empty">
+            <h3 class="ha-empty-title">No messages yet.</h3>
+        </div>
+    <% } else { %>
+        <ul class="ha-review-list ha-dashboard-messages-list">
+            <% msgs.forEach((message) => { %>
+                <li class="ha-review-item ha-dashboard-message-item">
+                    <div class="ha-dashboard-message-top">
+                        <div class="ha-review-item-header">
+                            <span class="ha-review-author"><%= message.subject %></span>
+                            <span class="ha-review-meta"><%= new Date(message.submitted).toLocaleString() %></span>
+                        </div>
+                        <form
+                            method="post"
+                            action="<%= contactMessagesActionBase %>/contact-messages/<%= message.id %>/toggle-resolved"
+                            class="ha-inline-form ha-dashboard-message-action"
+                        >
+                            <button
+                                type="submit"
+                                class="ha-button ha-button-sm <%= message.resolved ? 'ha-button-resolved-toggle' : 'ha-button-ghost' %>"
+                            >
+                                <%= message.resolved ? 'Resolved' : 'Resolve' %>
+                            </button>
+                        </form>
+                    </div>
+                    <p class="ha-review-meta"><%= message.name %> • <%= message.email %></p>
+                    <p class="ha-review-body"><%= message.message %></p>
+                </li>
+            <% }) %>
+        </ul>
+    <% } %>
+</section>

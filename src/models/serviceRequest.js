@@ -21,6 +21,19 @@ const statusEventsTableExists = async () => {
     return Boolean(result.rows[0]?.relation_name);
 };
 
+const ensureStatusEventsTable = async () => {
+    await db.query(
+        `CREATE TABLE IF NOT EXISTS service_request_status_events (
+            id SERIAL PRIMARY KEY,
+            service_request_id INTEGER NOT NULL REFERENCES service_requests(id) ON DELETE CASCADE,
+            status VARCHAR(20) NOT NULL CHECK (status IN ('submitted', 'in_progress', 'completed')),
+            note TEXT,
+            actor_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )`
+    );
+};
+
 const serviceRequestTitleColumnExists = async () => {
     const result = await db.query(
         `SELECT EXISTS (
@@ -215,6 +228,7 @@ const getServiceRequestByIdForUser = async ({ requestId, userId }) => {
  */
 const listServiceRequestStatusEventsForRequest = async (requestId) => {
     try {
+        await ensureStatusEventsTable();
         const result = await db.query(
             `SELECT
                 e.id,
@@ -227,7 +241,7 @@ const listServiceRequestStatusEventsForRequest = async (requestId) => {
             FROM service_request_status_events e
             LEFT JOIN users u ON u.id = e.actor_user_id
             WHERE e.service_request_id = $1
-            ORDER BY e.created_at ASC, e.id ASC`,
+            ORDER BY e.created_at DESC, e.id DESC`,
             [requestId]
         );
 
@@ -243,7 +257,29 @@ const listServiceRequestStatusEventsForRequest = async (requestId) => {
         }));
     } catch (error) {
         if (isMissingStatusEventsTableError(error)) {
-            return [];
+            const fallback = await db.query(
+                `SELECT status, notes, updated_at
+                 FROM service_requests
+                 WHERE id = $1
+                 LIMIT 1`,
+                [requestId]
+            );
+
+            const row = fallback.rows[0];
+            if (!row) return [];
+
+            return [
+                {
+                    id: 0,
+                    status: row.status,
+                    status_label: toStatusLabel(row.status),
+                    note: row.notes,
+                    created_at: row.updated_at,
+                    actor_user_id: null,
+                    actor_name: null,
+                    actor_role: null
+                }
+            ];
         }
 
         throw error;
@@ -259,6 +295,9 @@ const listServiceRequestStatusEventsForRequest = async (requestId) => {
  */
 const createServiceRequest = async ({ userId, title, vehicleId, description }) => {
     const canWriteStatusEvents = await statusEventsTableExists();
+    if (!canWriteStatusEvents) {
+        await ensureStatusEventsTable();
+    }
     const hasTitleColumn = await serviceRequestTitleColumnExists();
 
     const created = await withTransaction(async (client) => {
@@ -332,6 +371,148 @@ const cancelServiceRequestForUser = async ({ requestId, userId }) => {
     return 'completed';
 };
 
+const STAFF_REQUEST_SORT_KEYS = ['default', 'status', 'id', 'name', 'vehicle'];
+
+/**
+ * Staff list of service requests with user + vehicle context.
+ * Default: open / workflow order first (status stage, then recent activity).
+ *
+ * @param {{ hideCompleted?: boolean, sortKey?: 'default' | 'status' | 'id' | 'name' | 'vehicle' }} [options]
+ */
+const listServiceRequestsForStaff = async ({ hideCompleted = false, sortKey = 'default' } = {}) => {
+    const safeSort = STAFF_REQUEST_SORT_KEYS.includes(sortKey) ? sortKey : 'default';
+
+    const hasTitleColumn = await serviceRequestTitleColumnExists();
+    const titleSelection = hasTitleColumn ? 'sr.title' : 'NULL::text AS title';
+
+    const statusOrderExpr = `CASE sr.status
+                WHEN 'submitted' THEN 0
+                WHEN 'in_progress' THEN 1
+                WHEN 'completed' THEN 2
+                ELSE 3 END`;
+
+    const orderByMap = {
+        default: `${statusOrderExpr} ASC, sr.updated_at DESC, sr.id DESC`,
+        status: `${statusOrderExpr} ASC, sr.updated_at DESC, sr.id DESC`,
+        id: 'sr.id DESC',
+        name: 'LOWER(u.name) ASC, sr.id DESC',
+        vehicle: 'LOWER(v.make) ASC NULLS LAST, LOWER(v.model) ASC NULLS LAST, v.year DESC NULLS LAST, sr.id DESC'
+    };
+
+    const orderByClause = orderByMap[safeSort] ?? orderByMap.default;
+
+    const whereClause = hideCompleted ? `WHERE sr.status <> 'completed'` : '';
+
+    const result = await db.query(
+        `SELECT
+            sr.id,
+            sr.user_id,
+            sr.vehicle_id,
+            ${titleSelection},
+            sr.description,
+            sr.status,
+            sr.notes,
+            sr.created_at,
+            sr.updated_at,
+            v.year,
+            v.make,
+            v.model,
+            c.name AS category_name,
+            u.name AS user_name,
+            u.email AS user_email,
+            ${statusOrderExpr} AS status_sort
+        FROM service_requests sr
+        INNER JOIN users u ON u.id = sr.user_id
+        LEFT JOIN vehicles v ON v.id = sr.vehicle_id
+        LEFT JOIN categories c ON c.id = v.category_id
+        ${whereClause}
+        ORDER BY ${orderByClause}`
+    );
+
+    return result.rows.map((row) => ({
+        ...mapRowToServiceRequest(row),
+        user: {
+            id: row.user_id,
+            name: row.user_name,
+            email: row.user_email
+        }
+    }));
+};
+
+const getServiceRequestByIdForStaff = async (requestId) => {
+    const hasTitleColumn = await serviceRequestTitleColumnExists();
+    const titleSelection = hasTitleColumn ? 'sr.title' : 'NULL::text AS title';
+    const result = await db.query(
+        `SELECT
+            sr.id,
+            sr.user_id,
+            sr.vehicle_id,
+            ${titleSelection},
+            sr.description,
+            sr.status,
+            sr.notes,
+            sr.created_at,
+            sr.updated_at,
+            v.year,
+            v.make,
+            v.model,
+            c.name AS category_name,
+            u.name AS user_name,
+            u.email AS user_email
+        FROM service_requests sr
+        INNER JOIN users u ON u.id = sr.user_id
+        LEFT JOIN vehicles v ON v.id = sr.vehicle_id
+        LEFT JOIN categories c ON c.id = v.category_id
+        WHERE sr.id = $1
+        LIMIT 1`,
+        [requestId]
+    );
+
+    const row = result.rows[0];
+    if (!row) return null;
+
+    return {
+        ...mapRowToServiceRequest(row),
+        user: {
+            id: row.user_id,
+            name: row.user_name,
+            email: row.user_email
+        }
+    };
+};
+
+const updateServiceRequestByStaff = async ({ requestId, status, notes, actorUserId }) => {
+    await ensureStatusEventsTable();
+    const result = await db.query(
+        `UPDATE service_requests
+         SET status = $2, notes = $3, updated_at = CURRENT_TIMESTAMP
+         WHERE id = $1
+         RETURNING id`,
+        [requestId, status, notes]
+    );
+
+    const row = result.rows[0];
+    if (!row) return null;
+
+    const canWriteStatusEvents = await statusEventsTableExists();
+    if (canWriteStatusEvents) {
+        try {
+            await db.query(
+                `INSERT INTO service_request_status_events
+                    (service_request_id, status, note, actor_user_id)
+                 VALUES ($1, $2, $3, $4)`,
+                [requestId, status, notes || null, actorUserId]
+            );
+        } catch (error) {
+            if (!isMissingStatusEventsTableError(error)) {
+                throw error;
+            }
+        }
+    }
+
+    return row;
+};
+
 export {
     SERVICE_REQUEST_STATUSES,
     SERVICE_REQUEST_STATUS_LABELS,
@@ -339,5 +520,8 @@ export {
     getServiceRequestByIdForUser,
     listServiceRequestStatusEventsForRequest,
     createServiceRequest,
-    cancelServiceRequestForUser
+    cancelServiceRequestForUser,
+    listServiceRequestsForStaff,
+    getServiceRequestByIdForStaff,
+    updateServiceRequestByStaff
 };

@@ -668,11 +668,41 @@ a:hover {
     margin-bottom: 1.5rem;
 }
 
+.ha-hero-highlights-owner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 520px) {
+    .ha-hero-highlights {
+        grid-template-columns: 1fr;
+    }
+}
+
 .ha-highlight {
     padding: 1rem 1rem 0.9rem;
     border-radius: var(--ha-radius-md);
     border: 1px solid var(--ha-border-subtle);
     background-color: #f9fafb;
+}
+
+.ha-highlight-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+}
+
+.ha-highlight-top .ha-highlight-title {
+    margin: 0;
+}
+
+.ha-highlight-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    justify-content: flex-end;
+    flex-shrink: 0;
 }
 
 .ha-highlight-title {
@@ -684,6 +714,67 @@ a:hover {
     margin: 0;
     font-size: 0.875rem;
     color: var(--ha-text-muted);
+}
+
+.ha-dashboard-messages {
+    margin-top: 0.25rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--ha-border-subtle);
+}
+
+.ha-dashboard-messages-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.ha-dashboard-messages-title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.ha-dashboard-messages-empty {
+    margin: 0;
+}
+
+.ha-dashboard-messages-list {
+    margin-top: 0;
+}
+
+.ha-dashboard-message-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+}
+
+.ha-dashboard-message-top .ha-review-item-header {
+    margin-bottom: 0;
+    flex: 1;
+    min-width: 12rem;
+}
+
+.ha-dashboard-message-action {
+    flex-shrink: 0;
+}
+
+.ha-button-resolved-toggle {
+    background-color: #e5e7eb;
+    color: #6b7280;
+    border-color: #d1d5db;
+    cursor: pointer;
+}
+
+.ha-button-resolved-toggle:hover {
+    background-color: #f3f4f6;
+    color: #4b5563;
+    border-color: #c4c9d1;
 }
 
 .ha-hero-note {
@@ -896,17 +987,21 @@ a:hover {
     line-height: 1;
 }
 
-.ha-reviews-panel .ha-review-list {
+.ha-review-list {
     list-style: none;
-    margin: 0 0 1rem;
+    margin: 0;
     padding: 0;
+}
+
+.ha-reviews-panel .ha-review-list {
+    margin: 0 0 1rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
 .ha-review-item {
-    padding: 0.85rem 0 0;
+    padding: 0.85rem 0 0.85rem;
     border-top: 1px solid var(--ha-border-subtle);
 }
 

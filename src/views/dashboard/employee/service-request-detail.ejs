@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title || 'Service request – Honest Auto' %></title>
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body>
+        <div class="ha-app">
+            <header class="ha-header">
+                <div class="ha-header-inner">
+                    <%- include('../../partials/header') %>
+                    <%- include('../../partials/nav') %>
+                </div>
+            </header>
+            <main class="ha-main">
+                <section class="ha-flash-region"><%- include('../../partials/flash') %></section>
+                <section class="ha-page">
+                    <div class="ha-page-inner">
+                        <% const statusClass = request.status === 'completed'
+                            ? 'ha-status-pill-completed'
+                            : request.status === 'in_progress'
+                              ? 'ha-status-pill-in-progress'
+                              : 'ha-status-pill-submitted'; %>
+                        <div class="ha-page-heading">
+                            <div>
+                                <p class="ha-detail-kicker">
+                                    <%= request.vehicle?.category_name ? request.vehicle.category_name : 'Service request' %>
+                                </p>
+                                <h1 class="ha-page-title"><%= request.title || `Service request #${request.id}` %></h1>
+                                <p class="ha-detail-subtitle">
+                                    <span>Request #<%= request.id %></span>
+                                    <span class="ha-meta-sep">•</span>
+                                    <span class="ha-status-pill <%= statusClass %>"><%= request.status_label %></span>
+                                    <span class="ha-meta-sep">•</span>
+                                    <span>
+                                        Updated
+                                        <time datetime="<%= new Date(request.updated_at).toISOString() %>">
+                                            <%= new Date(request.updated_at).toLocaleDateString(undefined, {
+                                                year: 'numeric',
+                                                month: 'short',
+                                                day: 'numeric'
+                                            }) %>
+                                        </time>
+                                    </span>
+                                </p>
+                                <p class="ha-page-body" style="margin-top: 0.5rem; margin-bottom: 0;">
+                                    Requested by <strong><%= request.user?.name %></strong> (<%= request.user?.email %>)
+                                </p>
+                            </div>
+                            <div class="ha-page-actions">
+                                <a href="/dashboard/employee/service-requests" class="ha-button ha-button-ghost">Back</a>
+                            </div>
+                        </div>
+                        <div class="ha-detail-grid">
+                            <section class="ha-panel">
+                                <h3 class="ha-panel-title">Request details</h3>
+                                <p class="ha-panel-body"><%= request.description %></p>
+                                <% if (request.vehicle) { %>
+                                    <p class="ha-panel-body" style="margin-top: 0.75rem;">
+                                        Vehicle: <%= request.vehicle.year %> <%= request.vehicle.make %> <%= request.vehicle.model %>
+                                    </p>
+                                <% } %>
+                                <form method="post" action="/dashboard/employee/service-requests/<%= request.id %>" class="ha-form">
+                                    <div class="ha-field">
+                                        <label class="ha-label" for="status">Status</label>
+                                        <select id="status" name="status" class="ha-input">
+                                            <% statuses.forEach((status) => { %>
+                                                <option value="<%= status %>" <%= request.status === status ? 'selected' : '' %>>
+                                                    <%= status === 'in_progress' ? 'In Progress' : status.charAt(0).toUpperCase() + status.slice(1) %>
+                                                </option>
+                                            <% }) %>
+                                        </select>
+                                    </div>
+                                    <div class="ha-field">
+                                        <label class="ha-label" for="notes">Staff notes</label>
+                                        <textarea id="notes" name="notes" class="ha-textarea" rows="5"><%= staffNotesFieldValue %></textarea>
+                                    </div>
+                                    <div class="ha-page-actions">
+                                        <button type="submit" class="ha-button ha-button-primary">Update request</button>
+                                    </div>
+                                </form>
+                            </section>
+                            <aside class="ha-panel">
+                                <h3 class="ha-panel-title">Status history</h3>
+                                <% if (!events || events.length === 0) { %>
+                                    <p class="ha-panel-body">No status history yet.</p>
+                                <% } else { %>
+                                    <ul class="ha-review-list">
+                                        <% events.forEach((event) => { %>
+                                            <% const evColor = event.status === 'completed'
+                                                ? 'var(--ha-success)'
+                                                : event.status === 'in_progress'
+                                                  ? 'var(--ha-accent)'
+                                                  : event.status === 'submitted'
+                                                    ? 'var(--ha-info)'
+                                                    : 'var(--ha-text)'; %>
+                                            <li class="ha-review-item">
+                                                <div class="ha-review-item-header">
+                                                    <span class="ha-review-author" style="color:<%= evColor %>">
+                                                        <%= event.status_label %>
+                                                    </span>
+                                                    <span class="ha-review-meta">
+                                                        <time datetime="<%= new Date(event.created_at).toISOString() %>">
+                                                            <%= `${new Date(event.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })} : ${new Date(event.created_at).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}` %>
+                                                        </time>
+                                                        <% if (event.actor_name) { %>
+                                                            <span class="ha-meta-sep">•</span>
+                                                            <span><%= event.actor_name %></span>
+                                                        <% } %>
+                                                    </span>
+                                                </div>
+                                                <% if (event.note) { %><p class="ha-review-body"><%= event.note %></p><% } %>
+                                            </li>
+                                        <% }) %>
+                                    </ul>
+                                <% } %>
+                            </aside>
+                        </div>
+                    </div>
+                </section>
+            </main>
+            <footer class="ha-footer">
+                <div class="ha-footer-inner"><%- include('../../partials/footer') %></div>
+            </footer>
+        </div>
+    </body>
+</html>

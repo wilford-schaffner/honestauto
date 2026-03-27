@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title || 'Edit category – Honest Auto' %></title>
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body>
+        <div class="ha-app">
+            <header class="ha-header"><div class="ha-header-inner"><%- include('../../partials/header') %><%- include('../../partials/nav') %></div></header>
+            <main class="ha-main">
+                <section class="ha-flash-region"><%- include('../../partials/flash') %></section>
+                <section class="ha-page">
+                    <div class="ha-page-inner">
+                        <h1 class="ha-page-title">Edit category</h1>
+                        <% if (error) { %><p class="ha-field-error"><%= error %></p><% } %>
+                        <form method="post" action="/dashboard/owner/categories/<%= category.id %>" class="ha-form">
+                            <div class="ha-field">
+                                <label class="ha-label" for="name">Category name</label>
+                                <input id="name" name="name" class="ha-input <%= fieldErrors.name ? 'ha-input-error' : '' %>" value="<%= form.name %>" />
+                                <% if (fieldErrors.name) { %><p class="ha-field-error"><%= fieldErrors.name %></p><% } %>
+                            </div>
+                            <div class="ha-page-actions">
+                                <button type="submit" class="ha-button ha-button-primary">Save</button>
+                                <a href="/dashboard/owner/categories" class="ha-button ha-button-ghost">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </main>
+            <footer class="ha-footer"><div class="ha-footer-inner"><%- include('../../partials/footer') %></div></footer>
+        </div>
+    </body>
+</html>

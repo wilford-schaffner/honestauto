@@ -25,6 +25,42 @@ const listReviewsForVehicle = async (vehicleId) => {
 };
 
 /**
+ * List all reviews for staff moderation surfaces.
+ * @returns {Promise<Array<{
+ *   id:number,
+ *   user_id:number,
+ *   vehicle_id:number,
+ *   rating:number,
+ *   body:string,
+ *   created_at:Date,
+ *   author_name:string,
+ *   vehicle_make:string,
+ *   vehicle_model:string,
+ *   vehicle_year:number
+ * }>>}
+ */
+const listReviewsForModeration = async () => {
+    const result = await db.query(
+        `SELECT
+            r.id,
+            r.user_id,
+            r.vehicle_id,
+            r.rating,
+            r.body,
+            r.created_at,
+            u.name AS author_name,
+            v.make AS vehicle_make,
+            v.model AS vehicle_model,
+            v.year AS vehicle_year
+         FROM reviews r
+         INNER JOIN users u ON u.id = r.user_id
+         INNER JOIN vehicles v ON v.id = r.vehicle_id
+         ORDER BY r.created_at DESC, r.id DESC`
+    );
+    return result.rows;
+};
+
+/**
  * @param {number} userId
  * @param {number} vehicleId
  * @returns {Promise<{ id: number, user_id: number, vehicle_id: number, rating: number, body: string, created_at: Date } | null>}
@@ -107,6 +143,7 @@ const deleteReviewById = async (reviewId) => {
 
 export {
     listReviewsForVehicle,
+    listReviewsForModeration,
     findReviewByUserAndVehicle,
     getReviewById,
     createReview,

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title || 'Add vehicle – Honest Auto' %></title>
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body>
+        <div class="ha-app">
+            <header class="ha-header"><div class="ha-header-inner"><%- include('../../partials/header') %><%- include('../../partials/nav') %></div></header>
+            <main class="ha-main">
+                <section class="ha-flash-region"><%- include('../../partials/flash') %></section>
+                <section class="ha-page">
+                    <div class="ha-page-inner">
+                        <h1 class="ha-page-title">Add vehicle</h1>
+                        <% if (error) { %><p class="ha-field-error"><%= error %></p><% } %>
+                        <form method="post" action="/dashboard/owner/vehicles/new" class="ha-form">
+                            <div class="ha-form-grid">
+                                <div class="ha-field">
+                                    <label class="ha-label" for="category_id">Category</label>
+                                    <select id="category_id" name="category_id" class="ha-input <%= fieldErrors.category_id ? 'ha-input-error' : '' %>">
+                                        <option value="">Select</option>
+                                        <% categories.forEach((category) => { %>
+                                            <option value="<%= category.id %>" <%= String(form.category_id) === String(category.id) ? 'selected' : '' %>><%= category.name %></option>
+                                        <% }) %>
+                                    </select>
+                                </div>
+                                <div class="ha-field"><label class="ha-label" for="year">Year</label><input id="year" name="year" class="ha-input <%= fieldErrors.year ? 'ha-input-error' : '' %>" value="<%= form.year %>" /></div>
+                                <div class="ha-field"><label class="ha-label" for="make">Make</label><input id="make" name="make" class="ha-input <%= fieldErrors.make ? 'ha-input-error' : '' %>" value="<%= form.make %>" /></div>
+                                <div class="ha-field"><label class="ha-label" for="model">Model</label><input id="model" name="model" class="ha-input <%= fieldErrors.model ? 'ha-input-error' : '' %>" value="<%= form.model %>" /></div>
+                                <div class="ha-field"><label class="ha-label" for="price">Price</label><input id="price" name="price" class="ha-input <%= fieldErrors.price ? 'ha-input-error' : '' %>" value="<%= form.price %>" /></div>
+                                <div class="ha-field"><label class="ha-label" for="mileage">Mileage</label><input id="mileage" name="mileage" class="ha-input <%= fieldErrors.mileage ? 'ha-input-error' : '' %>" value="<%= form.mileage %>" /></div>
+                            </div>
+                            <div class="ha-field">
+                                <label class="ha-label" for="description">Description</label>
+                                <textarea id="description" name="description" rows="6" class="ha-textarea <%= fieldErrors.description ? 'ha-input-error' : '' %>"><%= form.description %></textarea>
+                            </div>
+                            <div class="ha-field">
+                                <label class="ha-label" for="available">Availability</label>
+                                <select id="available" name="available" class="ha-input <%= fieldErrors.available ? 'ha-input-error' : '' %>">
+                                    <option value="true" <%= form.available === 'true' ? 'selected' : '' %>>Available</option>
+                                    <option value="false" <%= form.available === 'false' ? 'selected' : '' %>>Unavailable</option>
+                                </select>
+                            </div>
+                            <div class="ha-page-actions">
+                                <button type="submit" class="ha-button ha-button-primary">Create vehicle</button>
+                                <a href="/dashboard/owner/vehicles" class="ha-button ha-button-ghost">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </main>
+            <footer class="ha-footer"><div class="ha-footer-inner"><%- include('../../partials/footer') %></div></footer>
+        </div>
+    </body>
+</html>

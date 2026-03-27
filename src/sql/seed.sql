@@ -97,7 +97,8 @@ CREATE TABLE contact_messages (
     email VARCHAR(255) NOT NULL,
     subject VARCHAR(255) NOT NULL,
     message TEXT NOT NULL,
-    submitted TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    submitted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    resolved BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 -- Seed users (password for all is P@$$w0rd!)

@@ -17,30 +17,61 @@
                             <h1 class="ha-page-title">Categories</h1>
                             <div class="ha-page-actions">
                                 <a href="/dashboard/owner" class="ha-button ha-button-ghost">Back</a>
+                                <button type="button" class="ha-button ha-button-primary" id="ha-add-category-toggle">Add Category</button>
                             </div>
                         </div>
                         <% if (error) { %><p class="ha-field-error"><%= error %></p><% } %>
-                        <form method="post" action="/dashboard/owner/categories" class="ha-form">
-                            <div class="ha-field">
-                                <label class="ha-label" for="name">New category name</label>
-                                <input id="name" name="name" class="ha-input <%= fieldErrors.name ? 'ha-input-error' : '' %>" value="<%= form.name %>" />
-                                <% if (fieldErrors.name) { %><p class="ha-field-error"><%= fieldErrors.name %></p><% } %>
+                        <% const shouldOpenAddCategory = Boolean((form && form.name) || (fieldErrors && fieldErrors.name)); %>
+                        <form method="post" action="/dashboard/owner/categories" class="ha-form ha-category-add-form" id="ha-category-add-form" data-open="<%= shouldOpenAddCategory ? 'true' : 'false' %>">
+                            <div class="ha-category-add-row" id="ha-category-add-row" <%= shouldOpenAddCategory ? '' : 'hidden' %>>
+                                <div class="ha-field">
+                                    <label class="ha-label" for="name">Category Name</label>
+                                    <input id="name" name="name" class="ha-input <%= fieldErrors.name ? 'ha-input-error' : '' %>" value="<%= form.name %>" />
+                                    <% if (fieldErrors.name) { %><p class="ha-field-error"><%= fieldErrors.name %></p><% } %>
+                                </div>
+                                <div class="ha-page-actions">
+                                    <button type="button" class="ha-button ha-button-ghost" id="ha-add-category-cancel">Cancel</button>
+                                    <button type="submit" class="ha-button ha-button-primary">Save</button>
+                                </div>
                             </div>
-                            <div class="ha-page-actions"><button type="submit" class="ha-button ha-button-primary">Add category</button></div>
                         </form>
                         <ul class="ha-review-list">
                             <% categories.forEach((category) => { %>
+                                <% const isEditingThis = edit && Number(edit.id) === Number(category.id); %>
                                 <li class="ha-review-item">
-                                    <div class="ha-review-item-header">
-                                        <span class="ha-review-author"><%= category.name %></span>
-                                        <span class="ha-review-meta">/<%= category.slug %></span>
+                                    <div data-category-view-row="<%= category.id %>" <%= isEditingThis ? 'hidden' : '' %>>
+                                        <div class="ha-review-item-header">
+                                            <span class="ha-review-author"><%= category.name %></span>
+                                            <span class="ha-review-meta">/<%= category.slug %></span>
+                                        </div>
+                                        <div class="ha-review-actions">
+                                            <button type="button" class="ha-button ha-button-ghost ha-button-sm" data-category-edit-toggle="<%= category.id %>">Edit</button>
+                                            <form method="post" action="/dashboard/owner/categories/<%= category.id %>/delete" class="ha-inline-form">
+                                                <button type="submit" class="ha-button ha-button-danger-ghost ha-button-sm" onclick="return confirm('Delete this category?');">Delete</button>
+                                            </form>
+                                        </div>
                                     </div>
-                                    <div class="ha-review-actions">
-                                        <a href="/dashboard/owner/categories/<%= category.id %>/edit" class="ha-button ha-button-ghost ha-button-sm">Edit</a>
-                                        <form method="post" action="/dashboard/owner/categories/<%= category.id %>/delete" class="ha-inline-form">
-                                            <button type="submit" class="ha-button ha-button-danger-ghost ha-button-sm" onclick="return confirm('Delete this category?');">Delete</button>
-                                        </form>
-                                    </div>
+                                    <form method="post" action="/dashboard/owner/categories/<%= category.id %>" class="ha-form ha-category-add-form" data-category-edit-form="<%= category.id %>" <%= isEditingThis ? '' : 'hidden' %>>
+                                        <input type="hidden" name="inline" value="1" />
+                                        <div class="ha-category-add-row" data-category-edit-row="<%= category.id %>">
+                                            <div class="ha-field">
+                                                <label class="ha-label" for="edit_name_<%= category.id %>">Category Name</label>
+                                                <input
+                                                    id="edit_name_<%= category.id %>"
+                                                    name="name"
+                                                    class="ha-input <%= isEditingThis && edit.fieldErrors && edit.fieldErrors.name ? 'ha-input-error' : '' %>"
+                                                    value="<%= isEditingThis ? edit.form.name : category.name %>"
+                                                />
+                                                <% if (isEditingThis && edit.fieldErrors && edit.fieldErrors.name) { %>
+                                                    <p class="ha-field-error"><%= edit.fieldErrors.name %></p>
+                                                <% } %>
+                                            </div>
+                                            <div class="ha-page-actions">
+                                                <button type="button" class="ha-button ha-button-ghost" data-category-edit-cancel="<%= category.id %>">Cancel</button>
+                                                <button type="submit" class="ha-button ha-button-primary">Save</button>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </li>
                             <% }) %>
                         </ul>
@@ -49,5 +80,75 @@
             </main>
             <footer class="ha-footer"><div class="ha-footer-inner"><%- include('../../partials/footer') %></div></footer>
         </div>
+        <script>
+            (() => {
+                const toggleButton = document.getElementById('ha-add-category-toggle');
+                const form = document.getElementById('ha-category-add-form');
+                const row = document.getElementById('ha-category-add-row');
+                const cancelButton = document.getElementById('ha-add-category-cancel');
+                const input = document.getElementById('name');
+
+                if (!toggleButton || !form || !row || !cancelButton || !input) return;
+
+                const setOpen = (open) => {
+                    if (open) {
+                        row.removeAttribute('hidden');
+                        toggleButton.setAttribute('hidden', '');
+                    } else {
+                        row.setAttribute('hidden', '');
+                        toggleButton.removeAttribute('hidden');
+                    }
+                    if (open) {
+                        requestAnimationFrame(() => input.focus());
+                    } else {
+                        input.value = '';
+                    }
+                };
+
+                const initialOpen = form.dataset.open === 'true';
+                setOpen(initialOpen);
+
+                toggleButton.addEventListener('click', () => setOpen(true));
+                cancelButton.addEventListener('click', () => setOpen(false));
+
+                const hideAllEditRows = () => {
+                    document.querySelectorAll('[data-category-edit-row]').forEach((el) => {
+                        el.setAttribute('hidden', '');
+                    });
+                };
+
+                document.querySelectorAll('[data-category-edit-toggle]').forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        const id = btn.getAttribute('data-category-edit-toggle');
+                        if (!id) return;
+
+                        // Only one inline editor open at a time; close "Add" too.
+                        setOpen(false);
+                        document.querySelectorAll('[data-category-edit-form]').forEach((el) => el.setAttribute('hidden', ''));
+                        document.querySelectorAll('[data-category-view-row]').forEach((el) => el.removeAttribute('hidden'));
+
+                        const viewRow = document.querySelector(`[data-category-view-row="${CSS.escape(id)}"]`);
+                        viewRow?.setAttribute('hidden', '');
+
+                        const form = document.querySelector(`[data-category-edit-form="${CSS.escape(id)}"]`);
+                        form?.removeAttribute('hidden');
+
+                        const input = document.getElementById(`edit_name_${id}`);
+                        if (input) requestAnimationFrame(() => input.focus());
+                    });
+                });
+
+                document.querySelectorAll('[data-category-edit-cancel]').forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        const id = btn.getAttribute('data-category-edit-cancel');
+                        if (!id) return;
+                        const form = document.querySelector(`[data-category-edit-form="${CSS.escape(id)}"]`);
+                        form?.setAttribute('hidden', '');
+                        const viewRow = document.querySelector(`[data-category-view-row="${CSS.escape(id)}"]`);
+                        viewRow?.removeAttribute('hidden');
+                    });
+                });
+            })();
+        </script>
     </body>
 </html>

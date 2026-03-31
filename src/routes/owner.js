@@ -18,6 +18,7 @@ import {
 } from '../controllers/owner.js';
 import { makePostToggleContactMessageResolved } from '../controllers/contactMessageActions.js';
 import { requireAuth, requireRole } from '../middleware/auth.js';
+import { vehicleImageUpload, uploadErrorHandler } from '../middleware/upload.js';
 import { ROLES } from '../models/user.js';
 
 const router = Router();
@@ -26,9 +27,19 @@ router.use(requireAuth, requireRole(ROLES.OWNER));
 router.get('/', showOwnerDashboard);
 router.get('/vehicles', showOwnerVehicles);
 router.get('/vehicles/new', showNewOwnerVehicle);
-router.post('/vehicles/new', createOwnerVehicle);
+router.post(
+    '/vehicles/new',
+    vehicleImageUpload.single('vehicle_image'),
+    uploadErrorHandler,
+    createOwnerVehicle
+);
 router.get('/vehicles/:id/edit', showOwnerVehicleEdit);
-router.post('/vehicles/:id', updateOwnerVehicle);
+router.post(
+    '/vehicles/:id',
+    vehicleImageUpload.single('vehicle_image'),
+    uploadErrorHandler,
+    updateOwnerVehicle
+);
 router.post('/vehicles/:id/delete', deleteOwnerVehicle);
 router.get('/categories', showOwnerCategories);
 router.post('/categories', createOwnerCategory);

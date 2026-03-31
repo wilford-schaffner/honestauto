@@ -15,7 +15,7 @@
                     <div class="ha-page-inner">
                         <h1 class="ha-page-title">Add Vehicle</h1>
                         <% if (error) { %><p class="ha-field-error"><%= error %></p><% } %>
-                        <form method="post" action="/dashboard/owner/vehicles/new" class="ha-form">
+                        <form method="post" action="/dashboard/owner/vehicles/new" class="ha-form" enctype="multipart/form-data">
                             <div class="ha-form-grid">
                                 <div class="ha-field">
                                     <label class="ha-label" for="category_id">Category</label>
@@ -35,6 +35,11 @@
                             <div class="ha-field">
                                 <label class="ha-label" for="description">Description</label>
                                 <textarea id="description" name="description" rows="6" class="ha-textarea <%= fieldErrors.description ? 'ha-input-error' : '' %>"><%= form.description %></textarea>
+                            </div>
+                            <div class="ha-field">
+                                <label class="ha-label" for="vehicle_image">Primary image (optional)</label>
+                                <input id="vehicle_image" name="vehicle_image" type="file" accept="image/*" class="ha-input" />
+                                <p class="ha-review-meta">Upload a JPG, PNG, WEBP, or AVIF (max 5MB).</p>
                             </div>
                             <div class="ha-field">
                                 <label class="ha-label" for="available">Availability</label>

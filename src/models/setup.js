@@ -12,6 +12,7 @@ const __dirname = path.dirname(__filename);
  */
 const setupDatabase = async () => {
     let hasData = false;
+    let usersTableExists = true;
 
     try {
         const result = await db.query(
@@ -19,13 +20,27 @@ const setupDatabase = async () => {
         );
         hasData = result.rows[0]?.has_data || false;
     } catch (error) {
-        // If the query fails (e.g., table doesn't exist yet), treat as no data
-        hasData = false;
+        // If the query fails because the table doesn't exist yet, apply schema.sql first.
+        // pg error code for "undefined_table" is 42P01.
+        if (error?.code === '42P01') {
+            usersTableExists = false;
+            hasData = false;
+        } else {
+            throw error;
+        }
     }
 
     if (hasData) {
         console.log('Database already seeded');
         return true;
+    }
+
+    if (!usersTableExists) {
+        console.log('Users table missing; applying schema...');
+
+        const schemaPath = path.join(__dirname, '..', 'sql', 'schema.sql');
+        const schemaSQL = fs.readFileSync(schemaPath, 'utf8');
+        await db.query(schemaSQL);
     }
 
     console.log('Seeding database...');

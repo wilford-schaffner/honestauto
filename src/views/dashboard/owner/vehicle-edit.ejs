@@ -15,7 +15,7 @@
                     <div class="ha-page-inner">
                         <h1 class="ha-page-title">Edit <%= vehicle.year %> <%= vehicle.make %> <%= vehicle.model %></h1>
                         <% if (error) { %><p class="ha-field-error"><%= error %></p><% } %>
-                        <form method="post" action="/dashboard/owner/vehicles/<%= vehicle.id %>" class="ha-form">
+                        <form method="post" action="/dashboard/owner/vehicles/<%= vehicle.id %>" class="ha-form" enctype="multipart/form-data">
                             <div class="ha-form-grid">
                                 <div class="ha-field">
                                     <label class="ha-label" for="category_id">Category</label>
@@ -32,6 +32,23 @@
                                 <div class="ha-field"><label class="ha-label" for="mileage">Mileage</label><input id="mileage" name="mileage" class="ha-input <%= fieldErrors.mileage ? 'ha-input-error' : '' %>" value="<%= form.mileage %>" /></div>
                             </div>
                             <div class="ha-field"><label class="ha-label" for="description">Description</label><textarea id="description" name="description" rows="6" class="ha-textarea <%= fieldErrors.description ? 'ha-input-error' : '' %>"><%= form.description %></textarea></div>
+                            <div class="ha-field">
+                                <label class="ha-label">Current primary image</label>
+                                <% const primary = vehicle.images && vehicle.images.length ? vehicle.images[0] : null; %>
+                                <% if (primary) { %>
+                                    <figure class="ha-gallery-item ha-gallery-item-primary" style="max-width: 520px;">
+                                        <img class="ha-gallery-image" src="<%= primary.url %>" alt="<%= primary.caption || `${vehicle.year} ${vehicle.make} ${vehicle.model}` %>" loading="lazy" />
+                                        <% if (primary.caption) { %><figcaption class="ha-gallery-caption"><%= primary.caption %></figcaption><% } %>
+                                    </figure>
+                                <% } else { %>
+                                    <p class="ha-panel-body">No image set.</p>
+                                <% } %>
+                            </div>
+                            <div class="ha-field">
+                                <label class="ha-label" for="vehicle_image">Replace primary image (optional)</label>
+                                <input id="vehicle_image" name="vehicle_image" type="file" accept="image/*" class="ha-input" />
+                                <p class="ha-review-meta">Upload a JPG, PNG, WEBP, or AVIF (max 5MB).</p>
+                            </div>
                             <div class="ha-field">
                                 <label class="ha-label" for="available">Availability</label>
                                 <select id="available" name="available" class="ha-input <%= fieldErrors.available ? 'ha-input-error' : '' %>">

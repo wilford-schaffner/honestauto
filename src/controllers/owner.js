@@ -5,6 +5,7 @@ import {
     listVehicles,
     updateVehicleById
 } from '../models/vehicle.js';
+import { replacePrimaryImage } from '../models/vehicleImage.js';
 import {
     createCategory,
     deleteCategoryById,
@@ -164,7 +165,16 @@ const createOwnerVehicle = async (req, res, next) => {
             return;
         }
 
-        await createVehicle(data);
+        const created = await createVehicle(data);
+        const vehicleId = created?.id;
+
+        if (vehicleId && req.file?.filename) {
+            await replacePrimaryImage({
+                vehicleId,
+                url: `/images/${req.file.filename}`,
+                caption: null
+            });
+        }
         req.session.flash = { success: 'Vehicle added to inventory.' };
         res.redirect('/dashboard/owner/vehicles');
     } catch (error) {
@@ -249,6 +259,14 @@ const updateOwnerVehicle = async (req, res, next) => {
         }
 
         await updateVehicleById({ vehicleId, ...data });
+
+        if (req.file?.filename) {
+            await replacePrimaryImage({
+                vehicleId,
+                url: `/images/${req.file.filename}`,
+                caption: null
+            });
+        }
         req.session.flash = { success: 'Vehicle updated.' };
         res.redirect('/dashboard/owner/vehicles');
     } catch (error) {
@@ -286,6 +304,7 @@ const showOwnerCategories = async (req, res, next) => {
             title: 'Categories – Honest Auto',
             categories,
             form: { name: '' },
+            edit: null,
             fieldErrors: {},
             error: null
         });
@@ -372,8 +391,26 @@ const updateOwnerCategory = async (req, res, next) => {
         const slug = slugify(name);
         const fieldErrors = {};
         if (!name || !slug) fieldErrors.name = 'Please enter a valid category name.';
+        const wantsInline = req.body?.inline === '1' || req.body?.inline === 'true';
 
         if (Object.keys(fieldErrors).length > 0) {
+            if (wantsInline) {
+                const categories = await listCategories();
+                res.status(400).render('dashboard/owner/categories', {
+                    title: 'Categories – Honest Auto',
+                    categories,
+                    form: { name: '' },
+                    edit: {
+                        id: categoryId,
+                        form: { name: typeof req.body.name === 'string' ? req.body.name : '' },
+                        fieldErrors
+                    },
+                    fieldErrors: {},
+                    error: 'Please fix the highlighted fields and try again.'
+                });
+                return;
+            }
+
             res.status(400).render('dashboard/owner/category-edit', {
                 title: `Edit Category – Honest Auto`,
                 category,

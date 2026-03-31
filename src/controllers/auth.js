@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import { createUser, findUserByEmail } from '../models/user.js';
+import { parseLoginPayload, parseRegisterPayload } from '../middleware/validation.js';
 
 const showLoginForm = (req, res) => {
     res.render('auth/login', {
@@ -19,30 +20,20 @@ const showRegisterForm = (req, res) => {
     });
 };
 
-const isNonEmpty = (value) => typeof value === 'string' && value.trim().length > 0;
-const hasAtSign = (value) => typeof value === 'string' && value.includes('@');
-
 const handleLogin = async (req, res, next) => {
     try {
-        const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : '';
-        const password = typeof req.body.password === 'string' ? req.body.password : '';
-        const fieldErrors = {};
-
-        if (!isNonEmpty(email) || !hasAtSign(email)) {
-            fieldErrors.email = 'Please enter a valid email address.';
-        }
-        if (!isNonEmpty(password)) {
-            fieldErrors.password = 'Please enter your password.';
-        }
+        const { data, fieldErrors } = parseLoginPayload(req.body);
 
         if (Object.keys(fieldErrors).length > 0) {
             return res.status(400).render('auth/login', {
                 title: 'Log In – Honest Auto',
                 error: 'Please correct the highlighted fields.',
-                form: { email },
+                form: { email: typeof req.body?.email === 'string' ? req.body.email.trim().toLowerCase() : '' },
                 fieldErrors
             });
         }
+
+        const { email, password } = data;
 
         const user = await findUserByEmail(email);
         const passwordIsValid = user ? await bcrypt.compare(password, user.password) : false;
@@ -74,34 +65,21 @@ const handleLogin = async (req, res, next) => {
 
 const handleRegister = async (req, res, next) => {
     try {
-        const name = typeof req.body.name === 'string' ? req.body.name.trim() : '';
-        const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : '';
-        const password = typeof req.body.password === 'string' ? req.body.password : '';
-        const confirmPassword = typeof req.body.confirmPassword === 'string' ? req.body.confirmPassword : '';
-
-        const fieldErrors = {};
-
-        if (!isNonEmpty(name)) {
-            fieldErrors.name = 'Please enter your name.';
-        }
-        if (!isNonEmpty(email) || !hasAtSign(email)) {
-            fieldErrors.email = 'Please enter a valid email address.';
-        }
-        if (!isNonEmpty(password) || password.length < 8) {
-            fieldErrors.password = 'Password must be at least 8 characters.';
-        }
-        if (confirmPassword !== password) {
-            fieldErrors.confirmPassword = 'Passwords do not match.';
-        }
+        const { data, fieldErrors } = parseRegisterPayload(req.body);
 
         if (Object.keys(fieldErrors).length > 0) {
             return res.status(400).render('auth/register', {
                 title: 'Create Account – Honest Auto',
                 error: 'Please correct the highlighted fields.',
-                form: { name, email },
+                form: {
+                    name: typeof req.body?.name === 'string' ? req.body.name.trim() : '',
+                    email: typeof req.body?.email === 'string' ? req.body.email.trim().toLowerCase() : ''
+                },
                 fieldErrors
             });
         }
+
+        const { name, email, password } = data;
 
         const existingUser = await findUserByEmail(email);
         if (existingUser) {

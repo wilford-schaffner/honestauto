@@ -28,10 +28,10 @@
                             moment.
                         </p>
 
-                        <% if (NODE_ENV !== 'production' && (error || stack)) { %>
+                        <% if (NODE_ENV !== 'production' && (debugError || stack)) { %>
                         <div class="ha-error-debug">
-                            <% if (error) { %>
-                            <p><strong>Error:</strong> <%= error %></p>
+                            <% if (debugError) { %>
+                            <p><strong>Error:</strong> <%= debugError %></p>
                             <% } %>
                             <% if (stack) { %>
                             <pre class="ha-error-stack"><%= stack %></pre>

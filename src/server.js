@@ -22,7 +22,9 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Simple request logging so we can see incoming hits
 app.use((req, res, next) => {
-    console.log(`${req.method} ${req.url}`);
+    if (NODE_ENV !== 'production') {
+        console.log(`${req.method} ${req.url}`);
+    }
     next();
 });
 

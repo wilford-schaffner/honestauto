@@ -34,7 +34,7 @@
                                 <% } %>
                             </div>
                             <% if (ownerListControls) { %>
-                                <div class="ha-page-actions" style="flex-wrap: wrap; justify-content: flex-end; align-items: center;">
+                                <div class="ha-page-actions">
                                     <a href="/dashboard/owner" class="ha-button ha-button-ghost">Back</a>
                                     <% if (showCompleted) { %>
                                         <a href="/dashboard/employee/service-requests" class="ha-button ha-button-ghost"
@@ -55,7 +55,10 @@
                             <% } %>
                         </div>
                         <% if (!requests || requests.length === 0) { %>
-                            <div class="ha-empty"><h3 class="ha-empty-title">No Service Requests Found.</h3></div>
+                            <div class="ha-empty">
+                                <h3 class="ha-empty-title">No Service Requests Found.</h3>
+                                <p class="ha-empty-body">New requests appear here once users submit them.</p>
+                            </div>
                         <% } else { %>
                             <ul class="ha-service-request-grid">
                                 <% requests.forEach((request) => { %>

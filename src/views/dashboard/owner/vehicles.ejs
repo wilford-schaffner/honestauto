@@ -26,7 +26,10 @@
                             </div>
                         </div>
                         <% if (!vehicles || vehicles.length === 0) { %>
-                            <div class="ha-empty"><h3 class="ha-empty-title">No Vehicles Found.</h3></div>
+                            <div class="ha-empty">
+                                <h3 class="ha-empty-title">No Vehicles Found.</h3>
+                                <p class="ha-empty-body">Add a vehicle to start building inventory.</p>
+                            </div>
                         <% } else { %>
                             <ul class="ha-review-list">
                                 <% vehicles.forEach((vehicle) => { %>

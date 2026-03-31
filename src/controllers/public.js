@@ -3,6 +3,7 @@ import { listCategories } from '../models/category.js';
 import { listVehicles, listFeaturedVehicles, getVehicleById } from '../models/vehicle.js';
 import { createContactMessage } from '../models/contactMessage.js';
 import { listReviewsForVehicle, findReviewByUserAndVehicle } from '../models/review.js';
+import { parseContactPayload } from '../middleware/validation.js';
 
 const listVehiclesPlain = async (req, res, next) => {
     try {
@@ -126,55 +127,48 @@ const showVehicleDetail = async (req, res, next) => {
 };
 
 const showContactForm = (req, res) => {
+    const contactForm = req.session?.contactForm || {
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+    };
+    const contactFieldErrors = req.session?.contactFieldErrors || {};
+
+    if (req.session) {
+        delete req.session.contactForm;
+        delete req.session.contactFieldErrors;
+    }
+
     res.render('contact/index', {
         title: 'Contact – Honest Auto',
-        form: {
-            name: '',
-            email: '',
-            subject: '',
-            message: ''
-        },
-        fieldErrors: {}
+        form: contactForm,
+        fieldErrors: contactFieldErrors
     });
 };
 
-const isNonEmptyString = (value) => typeof value === 'string' && value.trim().length > 0;
-
 const handleContactSubmit = async (req, res, next) => {
     try {
-        const name = typeof req.body.name === 'string' ? req.body.name.trim() : '';
-        const email = typeof req.body.email === 'string' ? req.body.email.trim() : '';
-        const subject = typeof req.body.subject === 'string' ? req.body.subject.trim() : '';
-        const message = typeof req.body.message === 'string' ? req.body.message.trim() : '';
-
-        const fieldErrors = {};
-
-        if (!isNonEmptyString(name)) fieldErrors.name = 'Please enter your name.';
-        if (!isNonEmptyString(email) || !email.includes('@')) fieldErrors.email = 'Please enter a valid email.';
-        if (!isNonEmptyString(subject)) fieldErrors.subject = 'Please enter a subject.';
-        if (!isNonEmptyString(message)) fieldErrors.message = 'Please enter a message.';
+        const { data, fieldErrors } = parseContactPayload(req.body);
 
         const hasErrors = Object.keys(fieldErrors).length > 0;
         if (hasErrors) {
-            res.status(400).render('contact/index', {
-                title: 'Contact – Honest Auto',
-                error: 'Please fix the highlighted fields and try again.',
-                form: { name, email, subject, message },
-                fieldErrors
-            });
-            return;
+            req.session.flash = { error: 'Please fix the highlighted fields and try again.' };
+            req.session.contactForm = {
+                name: typeof req.body?.name === 'string' ? req.body.name.trim() : '',
+                email: typeof req.body?.email === 'string' ? req.body.email.trim().toLowerCase() : '',
+                subject: typeof req.body?.subject === 'string' ? req.body.subject.trim() : '',
+                message: typeof req.body?.message === 'string' ? req.body.message.trim() : ''
+            };
+            req.session.contactFieldErrors = fieldErrors;
+            return res.redirect('/contact');
         }
 
-        await createContactMessage({ name, email, subject, message });
-
-        res.render('contact/index', {
-            title: 'Contact – Honest Auto',
-            success: 'Message received. We’ll get back to you soon.',
-            form: { name: '', email: '', subject: '', message: '' },
-            fieldErrors: {}
-        });
+        await createContactMessage(data);
+        req.session.flash = { success: 'Message received. We will get back to you soon.' };
+        return res.redirect('/contact');
     } catch (error) {
-        next(error);
+        return next(error);
     }
 };
 

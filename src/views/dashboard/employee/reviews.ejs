@@ -29,7 +29,10 @@
                             </div>
                         </div>
                         <% if (!reviews || reviews.length === 0) { %>
-                            <div class="ha-empty"><h3 class="ha-empty-title">No Reviews Found.</h3></div>
+                            <div class="ha-empty">
+                                <h3 class="ha-empty-title">No Reviews Found.</h3>
+                                <p class="ha-empty-body">User reviews will appear here for moderation.</p>
+                            </div>
                         <% } else { %>
                             <ul class="ha-review-list">
                                 <% reviews.forEach((review) => { %>

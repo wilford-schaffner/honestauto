@@ -30,11 +30,12 @@
                         <% if (!vehicles || vehicles.length === 0) { %>
                             <div class="ha-empty">
                                 <h3 class="ha-empty-title">No Vehicles Found.</h3>
+                                <p class="ha-empty-body">Inventory vehicles will appear here when available.</p>
                             </div>
                         <% } else { %>
                             <ul class="ha-review-list">
                                 <% vehicles.forEach((vehicle) => { %>
-                                    <li class="ha-review-item" style="padding-top: 1rem;">
+                                    <li class="ha-review-item ha-review-item-spacious">
                                         <div class="ha-review-item-header">
                                             <span class="ha-review-author">
                                                 <%= vehicle.year %> <%= vehicle.make %> <%= vehicle.model %>

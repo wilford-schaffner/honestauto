@@ -255,6 +255,15 @@ a:hover {
     border-radius: 1rem;
 }
 
+.ha-button:focus-visible,
+.ha-nav-link:focus-visible,
+.ha-pill:focus-visible,
+.ha-card-link:focus-visible,
+.ha-auth-link:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.3);
+    outline-offset: 2px;
+}
+
 .ha-service-request-header {
     display: flex;
     align-items: center;
@@ -613,6 +622,26 @@ select.ha-input.ha-user-role-select {
 
 .ha-page-error .ha-page-inner {
     background-color: #fff;
+}
+
+.ha-error-debug {
+    margin: 1rem 0 0;
+    padding: 0.9rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--ha-border-subtle);
+    background-color: #f8fafc;
+}
+
+.ha-error-stack {
+    margin: 0.6rem 0 0;
+    max-height: 16rem;
+    overflow: auto;
+    font-size: 0.8rem;
+    line-height: 1.45;
+    padding: 0.7rem;
+    border: 1px solid var(--ha-border-subtle);
+    border-radius: 0.6rem;
+    background-color: #ffffff;
 }
 
 .ha-hero {
@@ -1030,6 +1059,10 @@ select.ha-input.ha-user-role-select {
 .ha-review-item {
     padding: 0.85rem 0 0.85rem;
     border-top: 1px solid var(--ha-border-subtle);
+}
+
+.ha-review-item-spacious {
+    padding-top: 1rem;
 }
 
 .ha-review-item:first-of-type {

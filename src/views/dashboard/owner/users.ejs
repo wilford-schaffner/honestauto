@@ -20,7 +20,10 @@
                             </div>
                         </div>
                         <% if (!users || users.length === 0) { %>
-                            <div class="ha-empty"><h3 class="ha-empty-title">No Users Found.</h3></div>
+                            <div class="ha-empty">
+                                <h3 class="ha-empty-title">No Users Found.</h3>
+                                <p class="ha-empty-body">Accounts will appear here after users register.</p>
+                            </div>
                         <% } else { %>
                             <ul class="ha-review-list">
                                 <% users.forEach((user) => { %>

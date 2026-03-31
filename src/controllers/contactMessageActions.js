@@ -21,6 +21,9 @@ const makePostToggleContactMessageResolved = (redirectPath) => async (req, res, 
             throw err;
         }
 
+        req.session.flash = {
+            success: row.resolved ? 'Message marked as resolved.' : 'Message marked as unresolved.'
+        };
         res.redirect(redirectPath);
     } catch (error) {
         next(error);

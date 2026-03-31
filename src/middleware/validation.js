@@ -4,7 +4,18 @@ import {
     SERVICE_REQUEST_TITLE_MAX_LENGTH,
     SERVICE_REQUEST_DESCRIPTION_MAX_LENGTH,
     sanitizeServiceRequestTitle,
-    sanitizeServiceRequestDescription
+    sanitizeServiceRequestDescription,
+    AUTH_NAME_MAX_LENGTH,
+    AUTH_EMAIL_MAX_LENGTH,
+    AUTH_PASSWORD_MIN_LENGTH,
+    AUTH_PASSWORD_MAX_LENGTH,
+    CONTACT_NAME_MAX_LENGTH,
+    CONTACT_SUBJECT_MAX_LENGTH,
+    CONTACT_MESSAGE_MAX_LENGTH,
+    sanitizePersonName,
+    sanitizeEmail,
+    sanitizeContactSubject,
+    sanitizeContactMessage
 } from '../utils/sanitize.js';
 
 /**
@@ -91,3 +102,96 @@ const parseServiceRequestPayload = (body) => {
 };
 
 export { parseServiceRequestPayload };
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const NAME_REGEX = /^[A-Za-z\s'-]+$/;
+
+/**
+ * @param {import('express').Request['body']} body
+ * @returns {{ data: { email: string, password: string } | null, fieldErrors: Record<string, string> }}
+ */
+const parseLoginPayload = (body) => {
+    const fieldErrors = {};
+    const email = sanitizeEmail(body?.email);
+    const password = typeof body?.password === 'string' ? body.password : '';
+
+    if (!email || !EMAIL_REGEX.test(email) || email.length > AUTH_EMAIL_MAX_LENGTH) {
+        fieldErrors.email = 'Please enter a valid email address.';
+    }
+
+    if (!password || password.length < AUTH_PASSWORD_MIN_LENGTH || password.length > AUTH_PASSWORD_MAX_LENGTH) {
+        fieldErrors.password = `Password must be between ${AUTH_PASSWORD_MIN_LENGTH} and ${AUTH_PASSWORD_MAX_LENGTH} characters.`;
+    }
+
+    if (Object.keys(fieldErrors).length > 0) {
+        return { data: null, fieldErrors };
+    }
+
+    return { data: { email, password }, fieldErrors: {} };
+};
+
+/**
+ * @param {import('express').Request['body']} body
+ * @returns {{ data: { name: string, email: string, password: string, confirmPassword: string } | null, fieldErrors: Record<string, string> }}
+ */
+const parseRegisterPayload = (body) => {
+    const fieldErrors = {};
+
+    const name = sanitizePersonName(body?.name);
+    const email = sanitizeEmail(body?.email);
+    const password = typeof body?.password === 'string' ? body.password : '';
+    const confirmPassword = typeof body?.confirmPassword === 'string' ? body.confirmPassword : '';
+
+    if (!name || name.length > AUTH_NAME_MAX_LENGTH || !NAME_REGEX.test(name)) {
+        fieldErrors.name = 'Please enter a valid name (letters, spaces, apostrophes, and hyphens only).';
+    }
+    if (!email || !EMAIL_REGEX.test(email) || email.length > AUTH_EMAIL_MAX_LENGTH) {
+        fieldErrors.email = 'Please enter a valid email address.';
+    }
+    if (!password || password.length < AUTH_PASSWORD_MIN_LENGTH || password.length > AUTH_PASSWORD_MAX_LENGTH) {
+        fieldErrors.password = `Password must be between ${AUTH_PASSWORD_MIN_LENGTH} and ${AUTH_PASSWORD_MAX_LENGTH} characters.`;
+    }
+    if (confirmPassword !== password) {
+        fieldErrors.confirmPassword = 'Passwords do not match.';
+    }
+
+    if (Object.keys(fieldErrors).length > 0) {
+        return { data: null, fieldErrors };
+    }
+
+    return { data: { name, email, password, confirmPassword }, fieldErrors: {} };
+};
+
+/**
+ * @param {import('express').Request['body']} body
+ * @returns {{ data: { name: string, email: string, subject: string, message: string } | null, fieldErrors: Record<string, string> }}
+ */
+const parseContactPayload = (body) => {
+    const fieldErrors = {};
+
+    const name = sanitizePersonName(body?.name);
+    const email = sanitizeEmail(body?.email);
+    const subject = sanitizeContactSubject(body?.subject);
+    const message = sanitizeContactMessage(body?.message);
+
+    if (!name || name.length > CONTACT_NAME_MAX_LENGTH) {
+        fieldErrors.name = `Please enter your name (up to ${CONTACT_NAME_MAX_LENGTH} characters).`;
+    }
+    if (!email || !EMAIL_REGEX.test(email) || email.length > AUTH_EMAIL_MAX_LENGTH) {
+        fieldErrors.email = 'Please enter a valid email address.';
+    }
+    if (!subject || subject.length > CONTACT_SUBJECT_MAX_LENGTH) {
+        fieldErrors.subject = `Please enter a subject (up to ${CONTACT_SUBJECT_MAX_LENGTH} characters).`;
+    }
+    if (!message || message.length > CONTACT_MESSAGE_MAX_LENGTH) {
+        fieldErrors.message = `Please enter a message (up to ${CONTACT_MESSAGE_MAX_LENGTH} characters).`;
+    }
+
+    if (Object.keys(fieldErrors).length > 0) {
+        return { data: null, fieldErrors };
+    }
+
+    return { data: { name, email, subject, message }, fieldErrors: {} };
+};
+
+export { parseLoginPayload, parseRegisterPayload, parseContactPayload };

@@ -33,9 +33,6 @@ Registered users can leave reviews on vehicles and edit or delete their own revi
 
 ## Test Account Credentials
 
-All test accounts use the password: `P@$$w0rd!`
-
-
 | Role     | Email                                                     |
 | -------- | --------------------------------------------------------- |
 | Owner    | [owner@dealership.com](mailto:owner@dealership.com)       |
@@ -45,10 +42,8 @@ All test accounts use the password: `P@$$w0rd!`
 
 ## Known Limitations
 
-> Any incomplete features or known bugs will be listed here.
-
-- Item 1
-- Item 2
+- The README references `erd.png`; if the image file is missing in the repository, the diagram will not render on GitHub.
+- Service request updates currently rely on manual status changes by employees/owners and do not include automatic notifications to users.
 
 ## Repository Structure
 

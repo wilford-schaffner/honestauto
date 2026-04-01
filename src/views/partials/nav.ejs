@@ -1,27 +1,29 @@
-<nav class="ha-nav">
-    <ul class="ha-nav-list ha-nav-list-main">
-        <li class="ha-nav-item">
-            <a href="/" class="ha-nav-link">Home</a>
-        </li>
-        <li class="ha-nav-item">
-            <a href="/vehicles" class="ha-nav-link">Browse Vehicles</a>
-        </li>
-        <li class="ha-nav-item">
-            <a href="/contact" class="ha-nav-link">Contact</a>
-        </li>
-        <li class="ha-nav-item">
-            <a href="/user" class="ha-nav-link">Service Request</a>
-        </li>
-        <% if (currentUser?.role === 'employee' || currentUser?.role === 'owner') { %>
+<nav class="ha-nav" data-mobile-nav>
+    <div class="ha-nav-menu" id="ha-mobile-menu">
+        <ul class="ha-nav-list ha-nav-list-main">
             <li class="ha-nav-item">
-                <a
-                    href="<%= currentUser.role === 'owner' ? '/dashboard/owner' : '/dashboard/employee' %>"
-                    class="ha-nav-link"
-                    >Dashboard</a
-                >
+                <a href="/" class="ha-nav-link">Home</a>
             </li>
-        <% } %>
-    </ul>
+            <li class="ha-nav-item">
+                <a href="/vehicles" class="ha-nav-link">Browse Vehicles</a>
+            </li>
+            <li class="ha-nav-item">
+                <a href="/contact" class="ha-nav-link">Contact</a>
+            </li>
+            <li class="ha-nav-item">
+                <a href="/user" class="ha-nav-link">Service Request</a>
+            </li>
+            <% if (currentUser?.role === 'employee' || currentUser?.role === 'owner') { %>
+                <li class="ha-nav-item">
+                    <a
+                        href="<%= currentUser.role === 'owner' ? '/dashboard/owner' : '/dashboard/employee' %>"
+                        class="ha-nav-link"
+                        >Dashboard</a
+                    >
+                </li>
+            <% } %>
+        </ul>
+    </div>
 
     <% if (currentUser) { %>
         <div class="ha-auth-pill">
@@ -36,4 +38,54 @@
             <a href="/auth/register" class="ha-auth-link ha-auth-link-primary">Sign up</a>
         </div>
     <% } %>
+
+    <button
+        type="button"
+        class="ha-nav-toggle"
+        aria-expanded="false"
+        aria-controls="ha-mobile-menu"
+        aria-label="Open navigation menu"
+        data-mobile-nav-toggle
+    >
+        <span class="ha-nav-toggle-bar"></span>
+        <span class="ha-nav-toggle-bar"></span>
+        <span class="ha-nav-toggle-bar"></span>
+    </button>
 </nav>
+<script>
+    (() => {
+        const breakpoint = 1070;
+        const nav = document.querySelector('[data-mobile-nav]');
+        if (!nav) return;
+
+        const toggle = nav.querySelector('[data-mobile-nav-toggle]');
+        const links = nav.querySelectorAll('.ha-nav-menu .ha-nav-link');
+        if (!toggle) return;
+
+        const setOpen = (nextOpen) => {
+            nav.classList.toggle('is-open', nextOpen);
+            toggle.setAttribute('aria-expanded', String(nextOpen));
+            toggle.setAttribute('aria-label', nextOpen ? 'Close navigation menu' : 'Open navigation menu');
+        };
+
+        toggle.addEventListener('click', () => {
+            setOpen(!nav.classList.contains('is-open'));
+        });
+
+        links.forEach((link) => {
+            link.addEventListener('click', () => setOpen(false));
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                setOpen(false);
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > breakpoint) {
+                setOpen(false);
+            }
+        });
+    })();
+</script>

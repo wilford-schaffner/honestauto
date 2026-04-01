@@ -1,0 +1,63 @@
+        <script>
+            (() => {
+                const toggleButton = document.getElementById('ha-add-category-toggle');
+                const form = document.getElementById('ha-category-add-form');
+                const row = document.getElementById('ha-category-add-row');
+                const cancelButton = document.getElementById('ha-add-category-cancel');
+                const input = document.getElementById('name');
+
+                if (!toggleButton || !form || !row || !cancelButton || !input) return;
+
+                const setOpen = (open) => {
+                    if (open) {
+                        row.removeAttribute('hidden');
+                        toggleButton.setAttribute('hidden', '');
+                    } else {
+                        row.setAttribute('hidden', '');
+                        toggleButton.removeAttribute('hidden');
+                    }
+                    if (open) {
+                        requestAnimationFrame(() => input.focus());
+                    } else {
+                        input.value = '';
+                    }
+                };
+
+                const initialOpen = form.dataset.open === 'true';
+                setOpen(initialOpen);
+
+                toggleButton.addEventListener('click', () => setOpen(true));
+                cancelButton.addEventListener('click', () => setOpen(false));
+
+                document.querySelectorAll('[data-category-edit-toggle]').forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        const id = btn.getAttribute('data-category-edit-toggle');
+                        if (!id) return;
+
+                        setOpen(false);
+                        document.querySelectorAll('[data-category-edit-form]').forEach((el) => el.setAttribute('hidden', ''));
+                        document.querySelectorAll('[data-category-view-row]').forEach((el) => el.removeAttribute('hidden'));
+
+                        const viewRow = document.querySelector(`[data-category-view-row="${CSS.escape(id)}"]`);
+                        viewRow?.setAttribute('hidden', '');
+
+                        const editForm = document.querySelector(`[data-category-edit-form="${CSS.escape(id)}"]`);
+                        editForm?.removeAttribute('hidden');
+
+                        const editInput = document.getElementById(`edit_name_${id}`);
+                        if (editInput) requestAnimationFrame(() => editInput.focus());
+                    });
+                });
+
+                document.querySelectorAll('[data-category-edit-cancel]').forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        const id = btn.getAttribute('data-category-edit-cancel');
+                        if (!id) return;
+                        const editForm = document.querySelector(`[data-category-edit-form="${CSS.escape(id)}"]`);
+                        editForm?.setAttribute('hidden', '');
+                        const viewRow = document.querySelector(`[data-category-view-row="${CSS.escape(id)}"]`);
+                        viewRow?.removeAttribute('hidden');
+                    });
+                });
+            })();
+        </script>

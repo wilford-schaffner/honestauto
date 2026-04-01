@@ -1,58 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title><%= title || 'Open Requests – Honest Auto' %></title>
-        <link rel="stylesheet" href="/css/style.css" />
-    </head>
-    <body>
-        <div class="ha-app">
-            <header class="ha-header">
-                <div class="ha-header-inner">
-                    <%- include('../../partials/header') %>
-                    <%- include('../../partials/nav') %>
-                </div>
-            </header>
-            <main class="ha-main">
-                <section class="ha-flash-region"><%- include('../../partials/flash') %></section>
+<%- include('../../layouts/app-start') %>
                 <section class="ha-page">
                     <div class="ha-page-inner">
                         <div class="ha-page-heading ha-page-heading-inline">
                             <div>
                                 <h1 class="ha-page-title">Open Requests</h1>
-                                <% if (ownerListControls) { %>
-                                    <p class="ha-page-body">
-                                        <% if (showCompleted) { %>
-                                            Showing all requests, including completed.
-                                        <% } else { %>
-                                            Completed requests are hidden. Use “Show completed” to include them.
-                                        <% } %>
-                                    </p>
+                                <p class="ha-page-body">
+                                    <% if (showCompleted) { %>
+                                        Showing all requests, including completed.
+                                    <% } else { %>
+                                        Completed requests are hidden. Use “Show Completed” to include them.
+                                    <% } %>
+                                </p>
+                            </div>
+                            <div class="ha-page-actions">
+                                <a href="<%= isOwner ? '/dashboard/owner' : '/dashboard/employee' %>" class="ha-button ha-button-ghost">Back</a>
+                                <% if (showCompleted) { %>
+                                    <a href="/dashboard/employee/service-requests" class="ha-button ha-button-ghost"
+                                        >Hide Completed</a
+                                    >
                                 <% } else { %>
-                                    <p class="ha-page-body">Open requests are shown first to keep active work prioritized.</p>
+                                    <a
+                                        href="/dashboard/employee/service-requests?showCompleted=1"
+                                        class="ha-button ha-button-ghost"
+                                        >Show Completed</a
+                                    >
                                 <% } %>
                             </div>
-                            <% if (ownerListControls) { %>
-                                <div class="ha-page-actions">
-                                    <a href="/dashboard/owner" class="ha-button ha-button-ghost">Back</a>
-                                    <% if (showCompleted) { %>
-                                        <a href="/dashboard/employee/service-requests" class="ha-button ha-button-ghost"
-                                            >Hide completed</a
-                                        >
-                                    <% } else { %>
-                                        <a
-                                            href="/dashboard/employee/service-requests?showCompleted=1"
-                                            class="ha-button ha-button-ghost"
-                                            >Show completed</a
-                                        >
-                                    <% } %>
-                                </div>
-                            <% } else { %>
-                                <div class="ha-page-actions">
-                                    <a href="/dashboard/employee" class="ha-button ha-button-ghost">Back</a>
-                                </div>
-                            <% } %>
                         </div>
                         <% if (!requests || requests.length === 0) { %>
                             <div class="ha-empty">
@@ -84,10 +57,5 @@
                         <% } %>
                     </div>
                 </section>
-            </main>
-            <footer class="ha-footer">
-                <div class="ha-footer-inner"><%- include('../../partials/footer') %></div>
-            </footer>
-        </div>
-    </body>
-</html>
+<%- include('../../layouts/app-main-footer') %>
+<%- include('../../layouts/app-doc-end') %>

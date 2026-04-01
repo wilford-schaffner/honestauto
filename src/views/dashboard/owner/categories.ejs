@@ -1,16 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title><%= title || 'Categories – Honest Auto' %></title>
-        <link rel="stylesheet" href="/css/style.css" />
-    </head>
-    <body>
-        <div class="ha-app">
-            <header class="ha-header"><div class="ha-header-inner"><%- include('../../partials/header') %><%- include('../../partials/nav') %></div></header>
-            <main class="ha-main">
-                <section class="ha-flash-region"><%- include('../../partials/flash') %></section>
+<%- include('../../layouts/app-start') %>
                 <section class="ha-page">
                     <div class="ha-page-inner">
                         <div class="ha-page-heading ha-page-heading-inline">
@@ -77,78 +65,6 @@
                         </ul>
                     </div>
                 </section>
-            </main>
-            <footer class="ha-footer"><div class="ha-footer-inner"><%- include('../../partials/footer') %></div></footer>
-        </div>
-        <script>
-            (() => {
-                const toggleButton = document.getElementById('ha-add-category-toggle');
-                const form = document.getElementById('ha-category-add-form');
-                const row = document.getElementById('ha-category-add-row');
-                const cancelButton = document.getElementById('ha-add-category-cancel');
-                const input = document.getElementById('name');
-
-                if (!toggleButton || !form || !row || !cancelButton || !input) return;
-
-                const setOpen = (open) => {
-                    if (open) {
-                        row.removeAttribute('hidden');
-                        toggleButton.setAttribute('hidden', '');
-                    } else {
-                        row.setAttribute('hidden', '');
-                        toggleButton.removeAttribute('hidden');
-                    }
-                    if (open) {
-                        requestAnimationFrame(() => input.focus());
-                    } else {
-                        input.value = '';
-                    }
-                };
-
-                const initialOpen = form.dataset.open === 'true';
-                setOpen(initialOpen);
-
-                toggleButton.addEventListener('click', () => setOpen(true));
-                cancelButton.addEventListener('click', () => setOpen(false));
-
-                const hideAllEditRows = () => {
-                    document.querySelectorAll('[data-category-edit-row]').forEach((el) => {
-                        el.setAttribute('hidden', '');
-                    });
-                };
-
-                document.querySelectorAll('[data-category-edit-toggle]').forEach((btn) => {
-                    btn.addEventListener('click', () => {
-                        const id = btn.getAttribute('data-category-edit-toggle');
-                        if (!id) return;
-
-                        // Only one inline editor open at a time; close "Add" too.
-                        setOpen(false);
-                        document.querySelectorAll('[data-category-edit-form]').forEach((el) => el.setAttribute('hidden', ''));
-                        document.querySelectorAll('[data-category-view-row]').forEach((el) => el.removeAttribute('hidden'));
-
-                        const viewRow = document.querySelector(`[data-category-view-row="${CSS.escape(id)}"]`);
-                        viewRow?.setAttribute('hidden', '');
-
-                        const form = document.querySelector(`[data-category-edit-form="${CSS.escape(id)}"]`);
-                        form?.removeAttribute('hidden');
-
-                        const input = document.getElementById(`edit_name_${id}`);
-                        if (input) requestAnimationFrame(() => input.focus());
-                    });
-                });
-
-                document.querySelectorAll('[data-category-edit-cancel]').forEach((btn) => {
-                    btn.addEventListener('click', () => {
-                        const id = btn.getAttribute('data-category-edit-cancel');
-                        if (!id) return;
-                        const form = document.querySelector(`[data-category-edit-form="${CSS.escape(id)}"]`);
-                        form?.setAttribute('hidden', '');
-                        const viewRow = document.querySelector(`[data-category-view-row="${CSS.escape(id)}"]`);
-                        viewRow?.removeAttribute('hidden');
-                    });
-                });
-            })();
-        </script>
-    </body>
-</html>
+<%- include('../../layouts/app-main-footer') %>
+<%- include('../../partials/category-admin-script') %>
+<%- include('../../layouts/app-doc-end') %>

@@ -1,21 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title><%= title || 'Vehicles – Honest Auto' %></title>
-        <link rel="stylesheet" href="/css/style.css" />
-    </head>
-    <body>
-        <div class="ha-app">
-            <header class="ha-header">
-                <div class="ha-header-inner">
-                    <%- include('../../partials/header') %>
-                    <%- include('../../partials/nav') %>
-                </div>
-            </header>
-            <main class="ha-main">
-                <section class="ha-flash-region"><%- include('../../partials/flash') %></section>
+<%- include('../../layouts/app-start') %>
                 <section class="ha-page">
                     <div class="ha-page-inner">
                         <div class="ha-page-heading ha-page-heading-inline">
@@ -60,10 +43,5 @@
                         <% } %>
                     </div>
                 </section>
-            </main>
-            <footer class="ha-footer">
-                <div class="ha-footer-inner"><%- include('../../partials/footer') %></div>
-            </footer>
-        </div>
-    </body>
-</html>
+<%- include('../../layouts/app-main-footer') %>
+<%- include('../../layouts/app-doc-end') %>

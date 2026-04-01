@@ -899,6 +899,10 @@ select.ha-input.ha-user-role-select {
     gap: 1.25rem;
 }
 
+.ha-nav-menu {
+    display: block;
+}
+
 .ha-nav-list {
     display: flex;
     align-items: center;
@@ -933,6 +937,44 @@ select.ha-input.ha-user-role-select {
 
 .ha-nav-link-primary:hover {
     background-color: #dbeafe;
+}
+
+.ha-nav-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 2.2rem;
+    height: 2.2rem;
+    padding: 0;
+    border: 1px solid var(--ha-border-subtle);
+    border-radius: 999px;
+    background-color: #ffffff;
+    cursor: pointer;
+    position: relative;
+}
+
+.ha-nav-toggle-bar {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1rem;
+    height: 2px;
+    border-radius: 999px;
+    background-color: var(--ha-text);
+    transition: transform 160ms ease, opacity 160ms ease;
+}
+
+.ha-nav-toggle-bar:nth-child(1) {
+    transform: translate(-50%, -5px);
+}
+
+.ha-nav-toggle-bar:nth-child(2) {
+    transform: translate(-50%, -50%);
+}
+
+.ha-nav-toggle-bar:nth-child(3) {
+    transform: translate(-50%, 3px);
 }
 
 .ha-flash {
@@ -997,6 +1039,7 @@ select.ha-input.ha-user-role-select {
     display: inline-flex;
     align-items: center;
     padding: 0.18rem 0.18rem;
+    min-height: 2.2rem;
     border-radius: 999px;
     border: 1px solid var(--ha-border-subtle);
     background-color: #ffffff;
@@ -1184,8 +1227,6 @@ select.ha-input.ha-user-role-select {
 @media (max-width: 768px) {
     .ha-header-inner {
         padding-inline: 1rem;
-        flex-direction: column;
-        align-items: flex-start;
     }
 
     .ha-hero {
@@ -1198,12 +1239,6 @@ select.ha-input.ha-user-role-select {
 
     .ha-hero-highlights {
         grid-template-columns: 1fr;
-    }
-
-    .ha-nav {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.75rem;
     }
 
     .ha-vehicle-grid {
@@ -1236,5 +1271,123 @@ select.ha-input.ha-user-role-select {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
+    }
+}
+
+@media (max-width: 1070px) {
+    .ha-header-inner {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        column-gap: 0.55rem;
+        /* No row-gap when menu is closed — row 2 is empty but still exists; gap would add false height */
+        row-gap: 0;
+        padding: 0.75rem 1rem;
+    }
+
+    .ha-header-inner:has(.ha-nav.is-open) {
+        row-gap: 0.5rem;
+    }
+
+    .ha-brand-tagline {
+        display: none;
+    }
+
+    .ha-brand {
+        flex-shrink: 0;
+        align-self: center;
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .ha-brand-title {
+        white-space: nowrap;
+    }
+
+    .ha-nav {
+        display: contents;
+    }
+
+    .ha-auth-pill {
+        grid-column: 2 / 3;
+        grid-row: 1;
+        justify-self: end;
+    }
+
+    .ha-nav-toggle {
+        grid-column: 3 / 4;
+        grid-row: 1;
+        display: inline-flex;
+        flex-shrink: 0;
+    }
+
+    .ha-nav-menu {
+        grid-column: 1 / 4;
+        grid-row: 2;
+        justify-self: stretch;
+        width: 100%;
+        background-color: #ffffff;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 0;
+        transform: translateY(0.5rem);
+        opacity: 0;
+        pointer-events: none;
+        max-height: 0;
+        overflow: hidden;
+        transition: transform 260ms ease, opacity 260ms ease, max-height 300ms ease;
+    }
+
+    .ha-nav-list-main {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.1rem;
+    }
+
+    .ha-nav-list-main .ha-nav-item {
+        width: 100%;
+    }
+
+    .ha-nav-list-main .ha-nav-link {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 0.58rem 0;
+        padding-left: 0;
+        border-radius: 0.5rem;
+        transition: padding-left 180ms ease, background-color 120ms ease, color 120ms ease;
+    }
+
+    .ha-nav-list-main .ha-nav-link:hover {
+        padding-left: 0.65rem;
+    }
+
+    .ha-nav.is-open .ha-nav-menu {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+        max-height: 20rem;
+        padding-top: 0.5rem;
+    }
+
+    .ha-nav.is-open .ha-nav-toggle-bar:nth-child(1) {
+        transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    .ha-nav.is-open .ha-nav-toggle-bar:nth-child(2) {
+        opacity: 0;
+    }
+
+    .ha-nav.is-open .ha-nav-toggle-bar:nth-child(3) {
+        transform: translate(-50%, -50%) rotate(-45deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ha-nav-menu,
+    .ha-nav-toggle-bar,
+    .ha-nav-list-main .ha-nav-link {
+        transition: none;
     }
 }

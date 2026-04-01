@@ -22,8 +22,8 @@ A full-stack, server-side rendered web application for a used car dealership. Vi
 
 ## User Roles
 
-**Owner**
-The owner has full administrative control over the system. This includes adding, editing, and deleting vehicle categories and inventory, managing employee accounts, viewing all user data, and performing every action available to employees.
+**Owner**  
+The owner has full administrative control over the system. This includes adding, editing, and deleting vehicle categories and inventory, adding/editing vehicle images, managing employee accounts, viewing all user data, and performing every action available to employees.
 
 **Employee**
 Employees can edit vehicle details such as price, description, and availability. They can also moderate and delete inappropriate reviews, view and manage all service requests, update service request statuses (Submitted, In Progress, Completed), add notes to service requests, and view contact form submissions.
@@ -32,6 +32,7 @@ Employees can edit vehicle details such as price, description, and availability.
 Registered users can leave reviews on vehicles and edit or delete their own reviews. They can also submit service requests for their vehicles and view the status and history of their submitted requests.
 
 ## Test Account Credentials
+
 
 | Role     | Email                                                     |
 | -------- | --------------------------------------------------------- |
@@ -97,3 +98,4 @@ Application code lives under `src/`. Static files (CSS, client JS, images) are i
 ## Live Deployment (Production URL)
 
 > [https://honestauto.onrender.com/](https://honestauto.onrender.com/)
+

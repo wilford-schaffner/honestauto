@@ -191,20 +191,16 @@ const showEmployeeServiceRequests = async (req, res, next) => {
         const showCompleted =
             req.query.showCompleted === '1' || req.query.showCompleted === 'true';
 
-        const requests = await listServiceRequestsForStaff(
-            isOwner
-                ? {
-                      hideCompleted: !showCompleted,
-                      sortKey: 'status'
-                  }
-                : {}
-        );
+        const requests = await listServiceRequestsForStaff({
+            hideCompleted: !showCompleted,
+            sortKey: 'status'
+        });
 
         res.render('dashboard/employee/service-requests', {
             title: 'Open Requests – Honest Auto',
             requests,
-            ownerListControls: isOwner,
-            showCompleted: isOwner && showCompleted
+            isOwner,
+            showCompleted
         });
     } catch (error) {
         next(error);

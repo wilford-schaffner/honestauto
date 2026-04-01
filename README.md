@@ -1,5 +1,7 @@
 # Honest Auto
 
+![Honest Auto application preview](public/images/preview.png)
+
 ## Project Description
 
 A full-stack, server-side rendered web application for a used car dealership. Visitors can browse vehicle inventory by category, view individual vehicle detail pages, and submit contact inquiries. Registered users can leave reviews on vehicles and submit service requests for their vehicles. Employees and owners have access to management dashboards for handling inventory, reviews, service requests, and contact submissions.

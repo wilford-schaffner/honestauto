@@ -42,9 +42,8 @@ Registered users can leave reviews on vehicles and edit or delete their own revi
 
 
 ## Known Limitations
-
-- If `public/images/ERD.png` is missing from the repository, the diagram will not render on GitHub.
 - Service request updates currently rely on manual status changes by employees/owners and do not include automatic notifications to users.
+- If a vehicle is created in the production environment, images uploaded are stored on Render’s ephemeral disk and may be lost on redeploy; only images shipped with the repo (e.g. under public/images/) are guaranteed to persist. (fixing this exceeds the scope of the project as described in the class).
 
 ## Repository Structure
 

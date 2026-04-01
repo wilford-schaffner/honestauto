@@ -46,19 +46,19 @@ Registered users can leave reviews on vehicles and edit or delete their own revi
 
 ## Repository Structure
 
-Application code lives under `src/`. Static assets (CSS, images) are in `public/` at the repository root and are served from the site root (for example `/css/style.css`).
+Application code lives under `src/`. Static assets (CSS, images) are in `public/` at the repository root and are served from the site root (for example `/css/style.css`). `node_modules/`, `.env`, and `package-lock.json` are gitignored and are created or supplied when you run `npm install` and configure your environment.
 
 ```
 .
-├── ImplementationPlan.md
+├── .gitignore
 ├── README.md
 ├── requirements.md
 ├── nodemon.json
 ├── package.json
-├── package-lock.json
 ├── public/
 │   ├── css/
-│   └── images/
+│   │   └── style.css
+│   └── images/              # static assets (e.g. ERD.png, vehicle photos)
 └── src/
     ├── bin/                 # Postgres TLS certificate (used by models/db.js)
     ├── config/
@@ -81,6 +81,13 @@ Application code lives under `src/`. Static assets (CSS, images) are in `public/
         ├── home/
         ├── layouts/
         ├── partials/
+        │   ├── category-admin-script.ejs
+        │   ├── dashboard-messages.ejs
+        │   ├── flash.ejs
+        │   ├── footer.ejs
+        │   ├── header.ejs
+        │   ├── nav.ejs
+        │   └── review-form.ejs
         ├── reviews/
         ├── user/
         └── vehicles/

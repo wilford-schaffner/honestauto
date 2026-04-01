@@ -48,7 +48,7 @@ Registered users can leave reviews on vehicles and edit or delete their own revi
 
 ## Repository Structure
 
-Application code lives under `src/`. Static files (CSS, client JS, images) are in `public/` at the repository root and are served from the site root (for example `/css/style.css`).
+Application code lives under `src/`. Static assets (CSS, images) are in `public/` at the repository root and are served from the site root (for example `/css/style.css`).
 
 ```
 .
@@ -57,10 +57,10 @@ Application code lives under `src/`. Static files (CSS, client JS, images) are i
 ├── requirements.md
 ├── nodemon.json
 ├── package.json
+├── package-lock.json
 ├── public/
 │   ├── css/
-│   ├── images/
-│   └── js/
+│   └── images/
 └── src/
     ├── bin/                 # Postgres TLS certificate (used by models/db.js)
     ├── config/

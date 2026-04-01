@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import {
-    listVehiclesPlain,
     showHome,
     showVehiclesBrowse,
     showVehicleDetail,
@@ -28,7 +27,6 @@ router.post('/vehicles/:vehicleId/reviews/:reviewId/delete', requireAuth, delete
 router.get('/vehicles/:id', showVehicleDetail);
 router.get('/contact', showContactForm);
 router.post('/contact', handleContactSubmit);
-router.get('/vehicles-debug', listVehiclesPlain);
 
 export default router;
 

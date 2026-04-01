@@ -13,8 +13,18 @@ const caCert = fs.readFileSync(path.join(__dirname, '../bin', 'byuicse-psql-cert
 // Normalize NODE_ENV so we can safely inspect it
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
 
+// Hosted / course Postgres roles often cap concurrent sessions per DB user very low
+// (sometimes 2–5 total across every client: Render, local dev, psql, etc.).
+// Default stays at 2; set DB_POOL_MAX when your provider documents a higher limit.
+const parsedPoolMax = Number.parseInt(process.env.DB_POOL_MAX ?? '', 10);
+const poolMax =
+    Number.isFinite(parsedPoolMax) && parsedPoolMax > 0 ? Math.min(parsedPoolMax, 20) : 2;
+
 const pool = new Pool({
     connectionString: process.env.DB_URL,
+    max: poolMax,
+    idleTimeoutMillis: 20_000,
+    connectionTimeoutMillis: 15_000,
     ssl: {
         ca: caCert,
         rejectUnauthorized: true,
@@ -78,5 +88,7 @@ if (NODE_ENV.includes('dev') && process.env.ENABLE_SQL_LOGGING === 'true') {
     db = pool;
 }
 
+const closePool = () => pool.end();
+
 export default db;
-export { caCert, withTransaction };
+export { caCert, withTransaction, closePool };

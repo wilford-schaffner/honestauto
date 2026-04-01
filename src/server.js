@@ -3,6 +3,7 @@ import session from 'express-session';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { setupDatabase, testConnection } from './models/setup.js';
+import { closePool } from './models/db.js';
 import routes from './routes/index.js';
 import { notFoundHandler, globalErrorHandler } from './middleware/errorHandler.js';
 import { sessionConfig } from './config/index.js';
@@ -58,8 +59,25 @@ app.use(notFoundHandler);
 // Global error handler
 app.use(globalErrorHandler);
 
-app.listen(PORT, async () => {
+const server = app.listen(PORT, async () => {
     await setupDatabase();
     await testConnection();
     console.log(`[Honest Auto] Server is running on http://127.0.0.1:${PORT}`);
 });
+
+const shutdown = async (signal) => {
+    console.log(`[Honest Auto] ${signal} received; closing server and database pool`);
+    server.close(async () => {
+        try {
+            await closePool();
+        } catch (err) {
+            console.error('[Honest Auto] Error closing DB pool:', err.message);
+        }
+        process.exit(0);
+    });
+    // Force-exit if HTTP close stalls (e.g. hung keep-alive)
+    setTimeout(() => process.exit(0), 10_000).unref();
+};
+
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));

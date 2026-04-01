@@ -14,11 +14,9 @@ A full-stack, server-side rendered web application for a used car dealership. Vi
 
 ## Database Schema
 
-> ERD image exported from pgAdmin will be place here.
+Entity-relationship diagram for the PostgreSQL schema (users, vehicles, categories, reviews, service requests, and related tables).
 
-```
-![ERD Diagram](./erd.png)
-```
+![Database ERD](public/images/ERD.png)
 
 ## User Roles
 
@@ -43,7 +41,7 @@ Registered users can leave reviews on vehicles and edit or delete their own revi
 
 ## Known Limitations
 
-- The README references `erd.png`; if the image file is missing in the repository, the diagram will not render on GitHub.
+- If `public/images/ERD.png` is missing from the repository, the diagram will not render on GitHub.
 - Service request updates currently rely on manual status changes by employees/owners and do not include automatic notifications to users.
 
 ## Repository Structure

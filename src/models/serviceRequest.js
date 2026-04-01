@@ -10,8 +10,6 @@ const SERVICE_REQUEST_STATUS_LABELS = {
 
 const toStatusLabel = (status) => SERVICE_REQUEST_STATUS_LABELS[status] ?? status;
 const STATUS_EVENTS_TABLE = 'service_request_status_events';
-const SERVICE_REQUESTS_TABLE = 'service_requests';
-const SERVICE_REQUEST_TITLE_COLUMN = 'title';
 
 const isMissingStatusEventsTableError = (error) =>
     error?.code === '42P01' && String(error?.message || '').includes(STATUS_EVENTS_TABLE);
@@ -34,63 +32,10 @@ const ensureStatusEventsTable = async () => {
     );
 };
 
-const serviceRequestTitleColumnExists = async () => {
-    const result = await db.query(
-        `SELECT EXISTS (
-            SELECT 1
-            FROM information_schema.columns
-            WHERE table_schema = 'public'
-              AND table_name = $1
-              AND column_name = $2
-        ) AS has_column`,
-        [SERVICE_REQUESTS_TABLE, SERVICE_REQUEST_TITLE_COLUMN]
-    );
-
-    return Boolean(result.rows[0]?.has_column);
-};
-
 const coerceText = (value) => {
     if (value == null) return '';
     if (typeof value === 'string') return value;
     return String(value);
-};
-
-/**
- * Parses optional "Title: …" prefix stored in the description column (backup of
- * the title, and used when no dedicated title column exists).
- *
- * @returns {{ isPrefixed: boolean, title: string, description: string }}
- */
-const parseLegacyDescription = (raw) => {
-    const full = coerceText(raw)
-        .replace(/^\uFEFF/, '')
-        .replace(/\r\n/g, '\n')
-        .replace(/\r/g, '\n');
-
-    const marker = 'Title: ';
-    if (!full.startsWith(marker)) {
-        return { isPrefixed: false, title: '', description: full };
-    }
-
-    const rest = full.slice(marker.length);
-    let title = '';
-    let body = '';
-
-    const doubleNewline = rest.indexOf('\n\n');
-    if (doubleNewline >= 0) {
-        title = rest.slice(0, doubleNewline).trim();
-        body = rest.slice(doubleNewline + 2).trim();
-    } else {
-        const singleNewline = rest.indexOf('\n');
-        if (singleNewline >= 0) {
-            title = rest.slice(0, singleNewline).trim();
-            body = rest.slice(singleNewline + 1).trim();
-        } else {
-            title = rest.trim();
-        }
-    }
-
-    return { isPrefixed: true, title, description: body };
 };
 
 const mapRowToServiceRequest = (row) => {
@@ -105,17 +50,12 @@ const mapRowToServiceRequest = (row) => {
               }
             : null;
 
-    const sqlTitle = coerceText(row.title).trim();
-    const parsed = parseLegacyDescription(row.description);
-
-    const displayTitle = sqlTitle || parsed.title;
-
     return {
         id: row.id,
         status: row.status,
         status_label: toStatusLabel(row.status),
-        title: displayTitle,
-        description: parsed.description,
+        title: coerceText(row.title).trim(),
+        description: coerceText(row.description),
         notes: row.notes,
         created_at: row.created_at,
         updated_at: row.updated_at,
@@ -130,6 +70,7 @@ const mapRowToServiceRequest = (row) => {
  *   id: number,
  *   status: string,
  *   status_label: string,
+ *   title: string,
  *   description: string,
  *   notes: string | null,
  *   created_at: Date,
@@ -139,14 +80,12 @@ const mapRowToServiceRequest = (row) => {
  * }>>}
  */
 const listServiceRequestsForUser = async (userId) => {
-    const hasTitleColumn = await serviceRequestTitleColumnExists();
-    const titleSelection = hasTitleColumn ? 'sr.title' : 'NULL::text AS title';
     const result = await db.query(
         `SELECT
             sr.id,
             sr.user_id,
             sr.vehicle_id,
-            ${titleSelection},
+            sr.title,
             sr.description,
             sr.status,
             sr.notes,
@@ -173,6 +112,7 @@ const listServiceRequestsForUser = async (userId) => {
  *  id:number,
  *  status:string,
  *  status_label:string,
+ *  title:string,
  *  description:string,
  *  notes:string|null,
  *  created_at:Date,
@@ -182,14 +122,12 @@ const listServiceRequestsForUser = async (userId) => {
  * } | null>}
  */
 const getServiceRequestByIdForUser = async ({ requestId, userId }) => {
-    const hasTitleColumn = await serviceRequestTitleColumnExists();
-    const titleSelection = hasTitleColumn ? 'sr.title' : 'NULL::text AS title';
     const result = await db.query(
         `SELECT
             sr.id,
             sr.user_id,
             sr.vehicle_id,
-            ${titleSelection},
+            sr.title,
             sr.description,
             sr.status,
             sr.notes,
@@ -298,25 +236,13 @@ const createServiceRequest = async ({ userId, title, vehicleId, description }) =
     if (!canWriteStatusEvents) {
         await ensureStatusEventsTable();
     }
-    const hasTitleColumn = await serviceRequestTitleColumnExists();
-
     const created = await withTransaction(async (client) => {
-        const storedDescription = `Title: ${title}\n\n${description}`;
-        const insertColumns = hasTitleColumn
-            ? '(user_id, vehicle_id, title, description, status, notes)'
-            : '(user_id, vehicle_id, description, status, notes)';
-        const insertValues = hasTitleColumn
-            ? '($1, $2, $3, $4, \'submitted\', NULL)'
-            : '($1, $2, $3, \'submitted\', NULL)';
-        const insertParams = hasTitleColumn
-            ? [userId, vehicleId, title, storedDescription]
-            : [userId, vehicleId, storedDescription];
-
         const requestResult = await client.query(
-            `INSERT INTO service_requests ${insertColumns}
-             VALUES ${insertValues}
+            `INSERT INTO service_requests
+                (user_id, vehicle_id, title, description, status, notes)
+             VALUES ($1, $2, $3, $4, 'submitted', NULL)
              RETURNING id`,
-            insertParams
+            [userId, vehicleId, title, description]
         );
 
         const requestId = requestResult.rows[0].id;
@@ -382,9 +308,6 @@ const STAFF_REQUEST_SORT_KEYS = ['default', 'status', 'id', 'name', 'vehicle'];
 const listServiceRequestsForStaff = async ({ hideCompleted = false, sortKey = 'default' } = {}) => {
     const safeSort = STAFF_REQUEST_SORT_KEYS.includes(sortKey) ? sortKey : 'default';
 
-    const hasTitleColumn = await serviceRequestTitleColumnExists();
-    const titleSelection = hasTitleColumn ? 'sr.title' : 'NULL::text AS title';
-
     const statusOrderExpr = `CASE sr.status
                 WHEN 'submitted' THEN 0
                 WHEN 'in_progress' THEN 1
@@ -408,7 +331,7 @@ const listServiceRequestsForStaff = async ({ hideCompleted = false, sortKey = 'd
             sr.id,
             sr.user_id,
             sr.vehicle_id,
-            ${titleSelection},
+            sr.title,
             sr.description,
             sr.status,
             sr.notes,
@@ -440,14 +363,12 @@ const listServiceRequestsForStaff = async ({ hideCompleted = false, sortKey = 'd
 };
 
 const getServiceRequestByIdForStaff = async (requestId) => {
-    const hasTitleColumn = await serviceRequestTitleColumnExists();
-    const titleSelection = hasTitleColumn ? 'sr.title' : 'NULL::text AS title';
     const result = await db.query(
         `SELECT
             sr.id,
             sr.user_id,
             sr.vehicle_id,
-            ${titleSelection},
+            sr.title,
             sr.description,
             sr.status,
             sr.notes,
